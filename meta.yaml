@@ -1,0 +1,39 @@
+package:
+  name: sparsearray
+  version: "0.1.1"
+
+build:
+  number: 0
+
+requirements:
+  build:
+    - python
+    - setuptools
+    - numpy
+    - cython
+
+  run:
+    - python
+
+test:
+  # Python imports
+  imports:
+    - SparseArray
+
+  commands:
+    # You can put test commands to be run here.  Use this to test that the
+    # entry points work.
+
+    #- EvoDAG-params --help
+    #- EvoDAG-train --help
+    #- EvoDAG-predict --help
+
+  requires:
+    # Put any additional test requirements here.  For example
+    - numpy
+    - cython
+
+about:
+  home: https://github.com/mgraffg
+  summary: SparseArray
+  license: Apache
