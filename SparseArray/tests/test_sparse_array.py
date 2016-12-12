@@ -234,7 +234,7 @@ def test_finite():
     except ImportError:
         import math
 
-        def finite(x):
+        def isfinite(x):
             if math.isinf(x) or math.isnan(x):
                 return False
             return True
