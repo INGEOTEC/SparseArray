@@ -42,14 +42,15 @@ cdef class SparseArray:
     @classmethod
     def fromlist(cls, lst):
         cdef SparseArray res
+        cdef unsigned int k
+        cdef double v
         cdef Py_ssize_t i = 0
-        cdef list index = []
-        cdef list data = []
-        [(index.append(k), data.append(v)) for k, v in enumerate(lst) if v != 0]
-        res = cls.empty(len(lst), len(index))
-        for j, d in zip(index, data):
-            res.index.data.as_uints[i] = j
-            res.data.data.as_doubles[i] = d
+        res = cls.empty(len(lst), len(lst) - lst.count(0))
+        for k, v in enumerate(lst):
+            if v == 0:
+                continue
+            res.index.data.as_uints[i] = k
+            res.data.data.as_doubles[i] = v
             i += 1
         return res
         
@@ -118,17 +119,15 @@ cdef class SparseArray:
                 set_value(output_index, output_data, &c, a[k], res_value)
             if c < res.non_zero:
                 res.fix_size(c)
-            # res.non_zero = c
             return res
         while (i < a_non_zero) and (j < b_non_zero):
-            if a[i] == b[j]:
+            res_index = a[i]            
+            if res_index == b[j]:
                 res_value = func(a_value[i], b_value[j])
-                res_index = a[i]
                 i += 1
                 j += 1
-            elif a[i] < b[j]:
+            elif res_index < b[j]:
                 res_value = left(a_value[i])
-                res_index = a[i]
                 i += 1
             else:
                 res_value = right(b_value[j])
@@ -145,7 +144,6 @@ cdef class SparseArray:
                           left(a_value[k]))
         if c < res.non_zero:
             res.fix_size(c)
-        # res.non_zero = c
         return res
 
     cpdef SparseArray add(self, SparseArray second):
