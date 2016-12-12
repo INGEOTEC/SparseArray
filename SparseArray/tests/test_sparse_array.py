@@ -229,7 +229,16 @@ def test_unit_vector():
 
 
 def test_finite():
-    from math import isfinite
+    try:
+        from math import isfinite
+    except ImportError:
+        import math
+
+        def finite(x):
+            if math.isinf(x) or math.isnan(x):
+                return False
+            return True
+
     a = SparseArray.fromlist(random_lst(p=0.5))
     b = SparseArray.fromlist(random_lst(p=0.5))
     c = a / b
