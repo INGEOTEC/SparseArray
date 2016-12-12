@@ -248,6 +248,9 @@ cdef class SparseArray:
 
     cpdef SparseArray sqrt(self):
         return self.one_argument_func(math.sqrt, 0)
+
+    cpdef SparseArray sq(self):
+        return self.one_argument_func(sq_op, 0)
     
     cpdef SparseArray fabs(self):
         return self.one_argument_func(math.fabs, 0)
@@ -261,5 +264,104 @@ cdef class SparseArray:
     cpdef SparseArray trunc(self):
         return self.one_argument_func(math.trunc, 0)
 
+    cpdef SparseArray finite(self):
+        return self.one_argument_func(finite_op, 0)
+    
+    cdef unsigned int intersection_size(self, SparseArray second):
+        cdef Py_ssize_t i = 0, j = 0, c = 0
+        cdef unsigned int a_non_zero = self.non_zero
+        cdef unsigned int b_non_zero = second.non_zero
+        cdef unsigned int *a = self.index.data.as_uints
+        cdef unsigned int *b = second.index.data.as_uints
+        if self._len == a_non_zero and self._len == b_non_zero:
+            return a_non_zero
+        while (i < a_non_zero) and (j < b_non_zero):
+            if a[i] == b[j]:
+                i += 1
+                j += 1
+                c += 1
+            elif a[i] < b[j]:
+                i += 1
+            else:
+                j += 1
+        return c
+
+    cdef SparseArray intersection_func(self, two_arguments func,
+                                       SparseArray second):
+        cdef Py_ssize_t i = 0, j = 0, c = 0, k
+        cdef unsigned int a_non_zero = self.non_zero
+        cdef unsigned int b_non_zero = second.non_zero
+        cdef unsigned int *a = self.index.data.as_uints
+        cdef unsigned int *b = second.index.data.as_uints
+        cdef double *a_value = self.data.data.as_doubles
+        cdef double *b_value = second.data.data.as_doubles
+        cdef SparseArray res = self.empty(self._len, self.intersection_size(second))
+        cdef double *output_data = res.data.data.as_doubles
+        cdef unsigned int *output_index = res.index.data.as_uints
+        cdef double res_value
+        cdef unsigned int res_index
+        if self._len == a_non_zero and self._len == b_non_zero:
+            for k in range(a_non_zero):
+                res_value = func(a_value[k], b_value[k])
+                set_value(output_index, output_data, &c, a[k], res_value)
+            if c < res.non_zero:
+                res.fix_size(c)
+            return res
+        while (i < a_non_zero) and (j < b_non_zero):
+            if a[i] == b[j]:
+                res_value = func(a_value[i], b_value[j])
+                res_index = a[i]
+                set_value(output_index, output_data, &c, res_index, res_value)
+                i += 1
+                j += 1
+            elif a[i] < b[j]:
+                i += 1
+            else:
+                j += 1
+        if c < res.non_zero:
+            res.fix_size(c)
+        return res
+    
+    cpdef SparseArray mul(self, SparseArray second):
+        return self.intersection_func(mul_op, second)
+
+    def __mul__(self, second):
+        return self.mul(second)
+
+    cpdef bint isfinite(self):
+        cdef double *a_value = self.data.data.as_doubles
+        cdef Py_ssize_t i = 0
+        for i in range(self.non_zero):
+            if not math.isfinite(a_value[i]):
+                return False
+        return True
+
+    cpdef double sum(self):
+        cdef double *a_value = self.data.data.as_doubles
+        cdef double res = 0
+        cdef Py_ssize_t i = 0
+        for i in range(self.non_zero):
+            res += a_value[i]
+        return res
+
+    @cython.cdivision(True)
+    cpdef SparseArray unit_vector(self):
+        cdef SparseArray res = self.empty(self._len, self.non_zero)
+        cdef Py_ssize_t k, i=0, c=0
+        cdef unsigned int a_non_zero = self.non_zero
+        cdef unsigned int *a = self.index.data.as_uints
+        cdef double *a_value = self.data.data.as_doubles        
+        cdef double *output_data = res.data.data.as_doubles
+        cdef unsigned int *output_index = res.index.data.as_uints
+        cdef double res_value
+        cdef double norm = math.sqrt(self.sq().sum())
+        for k in range(self.non_zero):
+            res_value = a_value[k] / norm
+            set_value(output_index, output_data, &c, a[k], res_value)
+        if c < res.non_zero:
+            res.fix_size(c)
+        return res
+    
+    
     def __reduce__(self):
         return (rebuild, (self.data, self.index, self._len))

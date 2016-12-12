@@ -1,0 +1,16 @@
+language: python
+python:
+  - "2.7"
+  - "3.5"
+
+
+before_install:
+  - pip install cython
+  - python setup.py build_ext --inplace
+
+
+# command to run tests
+script: nosetests --cover-package=SparseArray SparseArray
+# nosetests --with-coverage --cover-package=EvoDAG
+
+# after_success: coveralls || echo "Coveralls upload failed"

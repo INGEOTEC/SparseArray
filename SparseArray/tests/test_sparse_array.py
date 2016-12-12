@@ -161,3 +161,80 @@ def test_one():
                                                         c.index)]
             [assert_almost_equals(v, w) for v, w in zip(res,
                                                         c.data)]
+
+
+def test_mul():
+    for p in [0.5, 1]:
+        a = random_lst(p=p)
+        b = random_lst(p=p)
+        c = SparseArray.fromlist(a) * SparseArray.fromlist(b)
+        res = [x * y for x, y in zip(a, b)]
+        index = [k for k, v in enumerate(res) if v != 0]
+        res = [x for x in res if x != 0]
+        assert c.non_zero == len(res)
+        assert len(c.data) == c.non_zero
+        [assert_almost_equals(v, w) for v, w in zip(index,
+                                                    c.index)]
+        print(c.non_zero, len(c.data), len([x for x in res if x != 0]))
+        [assert_almost_equals(v, w) for v, w in zip([x for x in res if x != 0],
+                                                    c.data)]
+
+
+def test_isfinite():
+    a = SparseArray.fromlist(random_lst(p=0.5))
+    b = SparseArray.fromlist(random_lst(p=0.5))
+    c = a / b
+    assert a.isfinite()
+    assert b.isfinite()
+    assert not c.isfinite()
+
+
+def test_sum2():
+    a = random_lst(p=0.5)
+    res = sum([x for x in a])
+    c = SparseArray.fromlist(a).sum()
+    assert res == c
+
+
+def test_sq():
+    a = random_lst(p=0.5)
+    res = [x**2 for x in a]
+    index = [k for k, v in enumerate(res) if v != 0]
+    res = [x for x in res if x != 0]
+    c = SparseArray.fromlist(a).sq()
+    assert c.non_zero == len(res)
+    assert len(c.data) == c.non_zero
+    [assert_almost_equals(v, w) for v, w in zip(index,
+                                                c.index)]
+    print(c.non_zero, len(c.data), len([x for x in res if x != 0]))
+    [assert_almost_equals(v, w) for v, w in zip([x for x in res if x != 0],
+                                                c.data)]
+
+
+def test_unit_vector():
+    from math import sqrt
+    a = random_lst(p=0.5)
+    norm = sqrt(sum([x**2 for x in a]))
+    res = [x / norm for x in a]
+    index = [k for k, v in enumerate(res) if v != 0]
+    res = [x for x in res if x != 0]
+    c = SparseArray.fromlist(a).unit_vector()
+    assert c.non_zero == len(res)
+    assert len(c.data) == c.non_zero
+    [assert_almost_equals(v, w) for v, w in zip(index,
+                                                c.index)]
+    print(c.non_zero, len(c.data), len([x for x in res if x != 0]))
+    [assert_almost_equals(v, w) for v, w in zip([x for x in res if x != 0],
+                                                c.data)]
+
+
+def test_finite():
+    from math import isfinite
+    a = SparseArray.fromlist(random_lst(p=0.5))
+    b = SparseArray.fromlist(random_lst(p=0.5))
+    c = a / b
+    res = [i for i in c.data if isfinite(i)]
+    d = c.finite()
+    [assert_almost_equals(v, w) for v, w in zip([x for x in res if x != 0],
+                                                d.data)]
+    

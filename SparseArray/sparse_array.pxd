@@ -21,6 +21,7 @@ ctypedef double (*one_argument)(double)
 
 # use Py_ssize_t instead of int to index
 
+
 cdef inline double non_op(double a):
     return a
 
@@ -58,6 +59,20 @@ cdef inline double div_op(double a, double b):
     return a / b
 
 
+cdef inline double sq_op(double a):
+    return a * a
+
+
+cdef inline double finite_op(double a):
+    if math.isfinite(a):
+        return a
+    return 0
+
+
+cdef inline double mul_op(double a, double b):
+    return a * b
+
+
 cdef inline void set_value(unsigned int *output_index,
                            double *output_data,
                            Py_ssize_t *c, unsigned int k,
@@ -76,7 +91,6 @@ cdef class SparseArray:
     cdef void _empty(self, unsigned int len, unsigned int non_zero)
     cdef void fix_size(self, unsigned int new_size)
     cdef unsigned int union_size(self, SparseArray second)
-    # cpdef int nintersection(self, SparseArray other)
     cdef SparseArray union_func(self, two_arguments func,
                                 one_argument left,
                                 one_argument right,
@@ -105,11 +119,21 @@ cdef class SparseArray:
     cpdef SparseArray expm1(self)
     cpdef SparseArray log1p(self)
     cpdef SparseArray sqrt(self)
+    cpdef SparseArray sq(self)
 
     cpdef SparseArray fabs(self)
     cpdef SparseArray ceil(self)
     cpdef SparseArray floor(self)
     cpdef SparseArray trunc(self)
+    cpdef SparseArray finite(self)
 
-    # cpdef SparseArray mul(self, SparseArray other)
-    # cpdef bint isfinite(self)
+    
+    cdef unsigned int intersection_size(self, SparseArray second)
+    cdef SparseArray intersection_func(self, two_arguments func,
+                                       SparseArray second)
+    cpdef SparseArray mul(self, SparseArray second)
+
+    cpdef double sum(self)
+    cpdef SparseArray unit_vector(self)
+    
+    cpdef bint isfinite(self)
