@@ -407,6 +407,7 @@ cdef class SparseArray:
     
     @staticmethod
     def cumsum(list lst):
+        cdef SparseArray r
         a = (lst[0]).add(lst[1])
         for r in lst[2:]:
             a = a.add(r)
@@ -414,6 +415,7 @@ cdef class SparseArray:
 
     @staticmethod
     def cummin(list lst):
+        cdef SparseArray r
         a = (lst[0]).min(lst[1])
         for r in lst[2:]:
             a = a.min(r)
@@ -421,6 +423,7 @@ cdef class SparseArray:
 
     @staticmethod
     def cummax(list lst):
+        cdef SparseArray r
         a = (lst[0]).max(lst[1])
         for r in lst[2:]:
             a = a.max(r)
