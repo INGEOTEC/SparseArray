@@ -357,8 +357,9 @@ def test_SAE():
 
 def test_density():
     a = random_lst(p=0.5)
-    density = (len(a) - a.count(0)) / len(a)
-    assert SparseArray.fromlist(a).density == density
+    density = (len(a) - a.count(0)) / float(len(a))
+    b = SparseArray.fromlist(a)
+    assert b.density == density
 
 
 def test_full_array():
