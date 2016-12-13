@@ -29,7 +29,8 @@ with open(join("SparseArray", "__init__.py"), "w") as fpt:
     fpt.write("".join(lst))
 
 extension = [Extension('SparseArray.sparse_array', ["SparseArray/sparse_array.pyx"],
-                       define_macros=[('CYTHON_TRACE', '1')])]
+                       define_macros=[('CYTHON_TRACE', '1'),
+                                      ('CYTHON_TRACE_NOGIL', '1')])]
 
 setup(
     name="SparseArray",
@@ -55,6 +56,7 @@ setup(
                                                'linetrace': True,
                                                'nonecheck': False,
                                                'binding': True,
+                                               'embedsignature': True,
                                                'boundscheck': False}),
     packages=['SparseArray', 'SparseArray/tests'],
     include_package_data=True,

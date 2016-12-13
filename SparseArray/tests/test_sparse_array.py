@@ -33,6 +33,7 @@ def test_fromlist():
     array = SparseArray.fromlist(lst)
     [assert_almost_equals(a, b) for a, b in zip([x for x in lst if x != 0],
                                                 array.data)]
+    assert len(array)
 
 
 def test_empty():

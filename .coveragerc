@@ -1,2 +1,6 @@
 [run]
 plugins = Cython.Coverage
+omit =
+     */tests/*
+     setup_coverage.py
+     array.pxd
