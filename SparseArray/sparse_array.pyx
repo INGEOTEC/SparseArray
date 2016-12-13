@@ -11,8 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# cython: profile=True
+# cython: profile=False
 # cython: nonecheck=False
+# cython: boundscheck=False
 
 
 cimport cython
@@ -148,16 +149,16 @@ cdef class SparseArray:
 
     cpdef SparseArray add(self, SparseArray second):
         return self.union_func(add_op, non_op, non_op, second)
-    
+
     def __add__(self, second):
         return self.add(second)
 
     cpdef SparseArray sub(self, SparseArray second):
         return self.union_func(sub_op, non_op, minus_op, second)
-    
+
     def __sub__(self, other):
         return self.sub(other)
-        
+
     cpdef SparseArray min(self, SparseArray second):
         return self.union_func(math.fmin, zero_min_op, zero_min_op, second)
 

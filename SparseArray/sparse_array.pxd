@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#cython: nonecheck=True
 
 from cpython cimport array
 cimport cython
@@ -22,70 +21,57 @@ ctypedef double (*one_argument)(double)
 # use Py_ssize_t instead of int to index
 
 
-@cython.boundscheck(False)
 cdef inline double non_op(double a):
     return a
 
 
-@cython.boundscheck(False)
 cdef inline double add_op(double a, double b):
     return a + b
 
 
-@cython.boundscheck(False)
 cdef inline double sub_op(double a, double b):
     return a - b
 
 
-@cython.boundscheck(False)
 cdef inline double minus_op(double a):
     return -a
 
 
-@cython.boundscheck(False)
 cdef inline double zero_min_op(double a):
     return math.fmin(a, 0)
 
 
-@cython.boundscheck(False)
 cdef inline double zero_max_op(double a):
     return math.fmax(a, 0)
 
 
-@cython.boundscheck(False)
 cdef inline double div_left_op(double a):
     return math.INFINITY
 
 
-@cython.boundscheck(False)
 cdef inline double div_right_op(double a):
     return 0
 
 
-@cython.boundscheck(False)
 @cython.cdivision(True)
 cdef inline double div_op(double a, double b):
     return a / b
 
 
-@cython.boundscheck(False)
 cdef inline double sq_op(double a):
     return a * a
 
 
-@cython.boundscheck(False)
 cdef inline double finite_op(double a):
     if math.isfinite(a):
         return a
     return 0
 
 
-@cython.boundscheck(False)
 cdef inline double mul_op(double a, double b):
     return a * b
 
 
-@cython.boundscheck(False)
 cdef inline void set_value(unsigned int *output_index,
                            double *output_data,
                            Py_ssize_t *c, unsigned int k,
@@ -96,7 +82,6 @@ cdef inline void set_value(unsigned int *output_index,
         c[0] = c[0] + 1
 
 
-@cython.boundscheck(False)
 cdef class SparseArray:
     cdef public unsigned int non_zero
     cdef unsigned int _len
