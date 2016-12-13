@@ -6,11 +6,12 @@ python:
 
 before_install:
   - pip install cython
-  - python setup.py build_ext --inplace
+  - pip install coverage
+  - pip install coveralls  
+  - python setup_coverage.py build_ext --inplace
 
 
 # command to run tests
-script: nosetests --cover-package=SparseArray SparseArray
-# nosetests --with-coverage --cover-package=EvoDAG
+script: coverage run setup_coverage.py nosetests
 
-# after_success: coveralls || echo "Coveralls upload failed"
+after_success: coveralls || echo "Coveralls upload failed"

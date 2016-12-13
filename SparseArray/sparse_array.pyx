@@ -11,9 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# cython: profile=False
-# cython: nonecheck=False
-# cython: boundscheck=False
 
 
 cimport cython
@@ -117,7 +114,6 @@ cdef class SparseArray:
             return c + b_non_zero - j
         else:
             return c + a_non_zero - i
-        return 0
     
     cdef SparseArray union_func(self, two_arguments func,
                                 one_argument left,

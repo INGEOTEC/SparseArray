@@ -13,6 +13,7 @@
 # limitations under the License.
 # import numpy
 from setuptools import setup
+from setuptools import Extension
 from Cython.Build import cythonize
 from os.path import join
 
@@ -26,6 +27,9 @@ for k in range(len(lst)):
         lst[k] = "__version__ = '%s'\n" % version
 with open(join("SparseArray", "__init__.py"), "w") as fpt:
     fpt.write("".join(lst))
+
+extension = [Extension('SparseArray.sparse_array', ["SparseArray/sparse_array.pyx"],
+                       define_macros=[('CYTHON_TRACE', '1')])]
 
 setup(
     name="SparseArray",
@@ -46,9 +50,11 @@ setup(
     url='https://github.com/mgraffg',
     author="Mario Graff",
     author_email="mgraffg@ieee.org",
-    ext_modules=cythonize('SparseArray/sparse_array.pyx',
-                          compiler_directives={'profile': False,
+    ext_modules=cythonize(extension,
+                          compiler_directives={'profile': True,
+                                               'linetrace': True,
                                                'nonecheck': False,
+                                               'binding': True,
                                                'boundscheck': False}),
     packages=['SparseArray', 'SparseArray/tests'],
     include_package_data=True,
