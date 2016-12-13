@@ -23,12 +23,10 @@ from cpython cimport array
 
 cpdef rebuild(data, index, size):
     cdef SparseArray r = SparseArray()
-    cdef Py_ssize_t k = 0
-    r.empty(size, len(data))
-    for d, j in zip(data, index):
-        r.data[k] = d
-        r.index[k] = j
-        i += 1
+    r._len = size
+    r.data = data
+    r.index = index
+    r.non_zero = len(index)
     return r
 
 
@@ -54,10 +52,33 @@ cdef class SparseArray:
             res.data.data.as_doubles[i] = v
             i += 1
         return res
-        
+
+    @property
+    def density(self):
+        return self.non_zero / float(self._len)
+
+    @property
+    def used_memory(self):
+        return self.data.itemsize * self.non_zero + self.index.itemsize * self.non_zero
+
+    @property
+    def maximum_memory(self):
+        return self.data.itemsize * self._len + self.index.itemsize * self._len
+    
     def __len__(self):
         return self._len
 
+    def full_array(self):
+        cdef array.array res = array.clone(self.data, self._len, zero=True)
+        cdef Py_ssize_t i
+        cdef unsigned int a_non_zero = self.non_zero
+        cdef unsigned int *a = self.index.data.as_uints
+        cdef double *a_value = self.data.data.as_doubles
+        cdef double *output_data = res.data.as_doubles
+        for i in range(a_non_zero):
+            output_data[a[i]] = a_value[i]
+        return res
+ 
     @classmethod
     def empty(cls, unsigned int len, unsigned int non_zero):
         cdef SparseArray res = cls()
@@ -378,6 +399,9 @@ cdef class SparseArray:
             res.fix_size(c)
         return res
 
+    cpdef double SSE(self, SparseArray second):
+        return self.sub(second).sq().sum()
+    
     @staticmethod
     def cumsum(list lst):
         a = (lst[0]).add(lst[1])

@@ -327,3 +327,42 @@ def test_mul_const():
             print(c.non_zero, len(c.data), len([x for x in res if x != 0]))
             [assert_almost_equals(v, w) for v, w in zip([x for x in res if x != 0],
                                                         c.data)]
+
+
+def test_pickle():
+    import pickle
+    import tempfile
+    suno = SparseArray.fromlist(random_lst())
+    with tempfile.TemporaryFile('w+b') as io:
+        pickle.dump(suno, io)
+        io.seek(0)
+        s = pickle.load(io)
+        assert s.SSE(suno) == 0
+            
+
+def test_SSE():
+    a = random_lst(p=0.5)
+    b = random_lst(p=0.5)
+    res = sum([(x - y)**2 for x, y in zip(a, b)])
+    assert res == SparseArray.fromlist(a).SSE(SparseArray.fromlist(b))
+
+
+def test_density():
+    a = random_lst(p=0.5)
+    density = (len(a) - a.count(0)) / len(a)
+    assert SparseArray.fromlist(a).density == density
+
+
+def test_full_array():
+    a = random_lst(p=0.5)
+    b = SparseArray.fromlist(a)
+    [assert_almost_equals(v, w) for v, w in zip(a,
+                                                b.full_array())]
+
+
+def test_used_maximum_memory():
+    a = random_lst(p=0.5)
+    b = SparseArray.fromlist(a)
+    assert b.used_memory
+    assert b.maximum_memory
+
