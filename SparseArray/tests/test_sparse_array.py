@@ -247,3 +247,83 @@ def test_finite():
     [assert_almost_equals(v, w) for v, w in zip([x for x in res if x != 0],
                                                 d.data)]
     
+
+def test_cumsum():
+    for p in [0.5, 1]:
+        a = random_lst(p=p)
+        b = random_lst(p=p)
+        c = random_lst(p=p)
+        
+        d = SparseArray.cumsum([SparseArray.fromlist(a),
+                                SparseArray.fromlist(b),
+                                SparseArray.fromlist(c)])
+        res = [x + y + z for x, y, z in zip(a, b, c)]
+        index = [k for k, v in enumerate(res) if v != 0]
+        res = [x for x in res if x != 0]
+        assert d.non_zero == len(res)
+        assert len(d.data) == d.non_zero
+        [assert_almost_equals(v, w) for v, w in zip(index,
+                                                    d.index)]
+        print(d.non_zero, len(d.data), len([x for x in res if x != 0]))
+        [assert_almost_equals(v, w) for v, w in zip([x for x in res if x != 0],
+                                                    d.data)]
+
+
+def test_cummin():
+    for p in [0.5, 1]:
+        a = random_lst(p=p)
+        b = random_lst(p=p)
+        c = random_lst(p=p)
+
+        d = SparseArray.cummin([SparseArray.fromlist(a),
+                                SparseArray.fromlist(b),
+                                SparseArray.fromlist(c)])
+        res = [min([x, y, z]) for x, y, z in zip(a, b, c)]
+        index = [k for k, v in enumerate(res) if v != 0]
+        res = [x for x in res if x != 0]
+        assert d.non_zero == len(res)
+        assert len(d.data) == d.non_zero
+        [assert_almost_equals(v, w) for v, w in zip(index,
+                                                    d.index)]
+        print(d.non_zero, len(d.data), len([x for x in res if x != 0]))
+        [assert_almost_equals(v, w) for v, w in zip([x for x in res if x != 0],
+                                                    d.data)]
+        
+
+def test_cummax():
+    for p in [0.5, 1]:
+        a = random_lst(p=p)
+        b = random_lst(p=p)
+        c = random_lst(p=p)
+
+        d = SparseArray.cummax([SparseArray.fromlist(a),
+                                SparseArray.fromlist(b),
+                                SparseArray.fromlist(c)])
+        res = [max([x, y, z]) for x, y, z in zip(a, b, c)]
+        index = [k for k, v in enumerate(res) if v != 0]
+        res = [x for x in res if x != 0]
+        assert d.non_zero == len(res)
+        assert len(d.data) == d.non_zero
+        [assert_almost_equals(v, w) for v, w in zip(index,
+                                                    d.index)]
+        print(d.non_zero, len(d.data), len([x for x in res if x != 0]))
+        [assert_almost_equals(v, w) for v, w in zip([x for x in res if x != 0],
+                                                    d.data)]
+
+
+def test_mul_const():
+    for k in [32.4, 0]:
+        for p in [0.5, 1]:
+            a = random_lst(p=p)
+            b = k
+            c = SparseArray.fromlist(a) * b
+            res = [x * b for x in a]
+            index = [k for k, v in enumerate(res) if v != 0]
+            res = [x for x in res if x != 0]
+            assert c.non_zero == len(res)
+            assert len(c.data) == c.non_zero
+            [assert_almost_equals(v, w) for v, w in zip(index,
+                                                        c.index)]
+            print(c.non_zero, len(c.data), len([x for x in res if x != 0]))
+            [assert_almost_equals(v, w) for v, w in zip([x for x in res if x != 0],
+                                                        c.data)]

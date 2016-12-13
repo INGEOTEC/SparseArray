@@ -324,8 +324,25 @@ cdef class SparseArray:
     cpdef SparseArray mul(self, SparseArray second):
         return self.intersection_func(mul_op, second)
 
+    cpdef SparseArray mul2(self, double second):
+        cdef SparseArray res = self.empty(self._len, self.non_zero)
+        cdef Py_ssize_t k, i=0, c=0
+        cdef unsigned int a_non_zero = self.non_zero
+        cdef unsigned int *a = self.index.data.as_uints
+        cdef double *a_value = self.data.data.as_doubles        
+        cdef double *output_data = res.data.data.as_doubles
+        cdef unsigned int *output_index = res.index.data.as_uints
+        for k in range(self.non_zero):
+            res_value = a_value[k] * second
+            set_value(output_index, output_data, &c, a[k], res_value)
+        if c < res.non_zero:
+            res.fix_size(c)
+        return res
+    
     def __mul__(self, second):
-        return self.mul(second)
+        if isinstance(second, SparseArray):
+            return self.mul(second)
+        return self.mul2(second)
 
     cpdef bint isfinite(self):
         cdef double *a_value = self.data.data.as_doubles
@@ -360,7 +377,27 @@ cdef class SparseArray:
         if c < res.non_zero:
             res.fix_size(c)
         return res
-    
+
+    @staticmethod
+    def cumsum(list lst):
+        a = (lst[0]).add(lst[1])
+        for r in lst[2:]:
+            a = a.add(r)
+        return a
+
+    @staticmethod
+    def cummin(list lst):
+        a = (lst[0]).min(lst[1])
+        for r in lst[2:]:
+            a = a.min(r)
+        return a
+
+    @staticmethod
+    def cummax(list lst):
+        a = (lst[0]).max(lst[1])
+        for r in lst[2:]:
+            a = a.max(r)
+        return a
     
     def __reduce__(self):
         return (rebuild, (self.data, self.index, self._len))

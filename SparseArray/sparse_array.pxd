@@ -126,11 +126,12 @@ cdef class SparseArray:
     cpdef SparseArray trunc(self)
     cpdef SparseArray finite(self)
 
-    
+
     cdef unsigned int intersection_size(self, SparseArray second)
     cdef SparseArray intersection_func(self, two_arguments func,
                                        SparseArray second)
     cpdef SparseArray mul(self, SparseArray second)
+    cpdef SparseArray mul2(self, double second)
 
     cpdef double sum(self)
     cpdef SparseArray unit_vector(self)
