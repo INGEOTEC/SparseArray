@@ -347,6 +347,14 @@ def test_SSE():
     assert res == SparseArray.fromlist(a).SSE(SparseArray.fromlist(b))
 
 
+def test_SAE():
+    from math import fabs
+    a = random_lst(p=0.5)
+    b = random_lst(p=0.5)
+    res = sum([fabs(x - y) for x, y in zip(a, b)])
+    assert res == SparseArray.fromlist(a).SAE(SparseArray.fromlist(b))
+    
+
 def test_density():
     a = random_lst(p=0.5)
     density = (len(a) - a.count(0)) / len(a)

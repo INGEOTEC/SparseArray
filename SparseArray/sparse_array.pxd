@@ -136,5 +136,6 @@ cdef class SparseArray:
     cpdef double sum(self)
     cpdef SparseArray unit_vector(self)
     cpdef double SSE(self, SparseArray second)
+    cpdef double SAE(self, SparseArray second)
     
     cpdef bint isfinite(self)

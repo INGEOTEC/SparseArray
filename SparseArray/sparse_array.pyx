@@ -401,6 +401,9 @@ cdef class SparseArray:
 
     cpdef double SSE(self, SparseArray second):
         return self.sub(second).sq().sum()
+
+    cpdef double SAE(self, SparseArray second):
+        return self.sub(second).fabs().sum()
     
     @staticmethod
     def cumsum(list lst):
