@@ -41,7 +41,14 @@ cdef class SparseArray:
         cdef unsigned int k
         cdef double v
         cdef Py_ssize_t i = 0
-        res = cls.empty(len(lst), len(lst) - lst.count(0))
+        try:            
+            res = cls.empty(len(lst), len(lst) - lst.count(0))
+        except AttributeError:
+            k = 0
+            for v in lst:
+                if v == 0:
+                    k += 1
+            res = cls.empty(len(lst), len(lst) - k)
         for k, v in enumerate(lst):
             if v == 0:
                 continue
@@ -50,6 +57,15 @@ cdef class SparseArray:
             i += 1
         return res
 
+    @classmethod
+    def index_data(cls, index_data, size):
+        cdef SparseArray r = cls()
+        r._len = size
+        r.index = array.array('I', [x[0] for x in index_data])
+        r.data = array.array('d', [x[1] for x in index_data])
+        r.non_zero = len(index_data)
+        return r
+        
     @property
     def density(self):
         return self.non_zero / float(self._len)
@@ -358,7 +374,10 @@ cdef class SparseArray:
     
     def __mul__(self, second):
         if isinstance(second, SparseArray):
-            return self.mul(second)
+            try:
+                return self.mul(second)
+            except AttributeError:
+                return second.mul2(self)
         return self.mul2(second)
 
     cpdef bint isfinite(self):

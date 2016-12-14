@@ -36,6 +36,14 @@ def test_fromlist():
     assert len(array)
 
 
+def test_index_data():
+    lst = random_lst()
+    array = SparseArray.index_data([(k, v) for k, v in enumerate(lst) if v != 0],
+                                   len(lst))
+    [assert_almost_equals(a, b) for a, b in zip([x for x in lst if x != 0],
+                                                array.data)]
+
+
 def test_empty():
     array = SparseArray.empty(100, 10)
     assert len(array) == 100
