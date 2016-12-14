@@ -338,6 +338,24 @@ def test_mul_const():
                                                         c.data)]
 
 
+def test_mul_const2():
+    for k in [32.4, 0]:
+        for p in [0.5, 1]:
+            a = random_lst(p=p)
+            b = k
+            c = b * SparseArray.fromlist(a)
+            res = [x * b for x in a]
+            index = [k for k, v in enumerate(res) if v != 0]
+            res = [x for x in res if x != 0]
+            assert c.non_zero == len(res)
+            assert len(c.data) == c.non_zero
+            [assert_almost_equals(v, w) for v, w in zip(index,
+                                                        c.index)]
+            print(c.non_zero, len(c.data), len([x for x in res if x != 0]))
+            [assert_almost_equals(v, w) for v, w in zip([x for x in res if x != 0],
+                                                        c.data)]
+
+
 def test_pickle():
     import pickle
     import tempfile
