@@ -33,7 +33,12 @@ def test_fromlist():
     array = SparseArray.fromlist(lst)
     [assert_almost_equals(a, b) for a, b in zip([x for x in lst if x != 0],
                                                 array.data)]
-    assert len(array)
+
+
+def test_len_size():
+    lst = random_lst()
+    array = SparseArray.fromlist(lst)
+    assert len(array) == array.size()
 
 
 def test_index_data():
@@ -220,6 +225,28 @@ def test_sq():
                                                 c.data)]
 
 
+def test_sign():
+    def sign(a):
+        if a > 0:
+            return 1
+        elif a < 0:
+            return -1
+        return 0
+    
+    a = random_lst(p=0.5)
+    res = [sign(x) for x in a]
+    index = [k for k, v in enumerate(res) if v != 0]
+    res = [x for x in res if x != 0]
+    c = SparseArray.fromlist(a).sign()
+    assert c.non_zero == len(res)
+    assert len(c.data) == c.non_zero
+    [assert_almost_equals(v, w) for v, w in zip(index,
+                                                c.index)]
+    print(c.non_zero, len(c.data), len([x for x in res if x != 0]))
+    [assert_almost_equals(v, w) for v, w in zip([x for x in res if x != 0],
+                                                c.data)]
+
+
 def test_unit_vector():
     from math import sqrt
     a = random_lst(p=0.5)
@@ -345,6 +372,42 @@ def test_mul_const2():
             b = k
             c = b * SparseArray.fromlist(a)
             res = [x * b for x in a]
+            index = [k for k, v in enumerate(res) if v != 0]
+            res = [x for x in res if x != 0]
+            assert c.non_zero == len(res)
+            assert len(c.data) == c.non_zero
+            [assert_almost_equals(v, w) for v, w in zip(index,
+                                                        c.index)]
+            print(c.non_zero, len(c.data), len([x for x in res if x != 0]))
+            [assert_almost_equals(v, w) for v, w in zip([x for x in res if x != 0],
+                                                        c.data)]
+
+
+def test_sum_const():
+    for k in [32.4, 0]:
+        for p in [0.5, 1]:
+            a = random_lst(p=p)
+            b = k
+            c = SparseArray.fromlist(a) + b
+            res = [x + b for x in a]
+            index = [k for k, v in enumerate(res) if v != 0]
+            res = [x for x in res if x != 0]
+            assert c.non_zero == len(res)
+            assert len(c.data) == c.non_zero
+            [assert_almost_equals(v, w) for v, w in zip(index,
+                                                        c.index)]
+            print(c.non_zero, len(c.data), len([x for x in res if x != 0]))
+            [assert_almost_equals(v, w) for v, w in zip([x for x in res if x != 0],
+                                                        c.data)]
+
+
+def test_sum_const2():
+    for k in [32.4, 0]:
+        for p in [0.5, 1]:
+            a = random_lst(p=p)
+            b = k
+            c = b + SparseArray.fromlist(a)
+            res = [x + b for x in a]
             index = [k for k, v in enumerate(res) if v != 0]
             res = [x for x in res if x != 0]
             assert c.non_zero == len(res)

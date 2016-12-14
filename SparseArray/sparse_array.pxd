@@ -62,6 +62,14 @@ cdef inline double sq_op(double a):
     return a * a
 
 
+cdef inline double sign_op(double a):
+    if a > 0:
+        return 1
+    elif a < 0:
+        return -1
+    return 0
+
+
 cdef inline double finite_op(double a):
     if math.isfinite(a):
         return a
@@ -95,6 +103,7 @@ cdef class SparseArray:
                                 one_argument right,
                                 SparseArray second)
     cpdef SparseArray add(self, SparseArray second)
+    cpdef SparseArray add2(self, double second)    
     cpdef SparseArray sub(self, SparseArray second)
     cpdef SparseArray min(self, SparseArray second)
     cpdef SparseArray max(self, SparseArray second)
@@ -119,6 +128,7 @@ cdef class SparseArray:
     cpdef SparseArray log1p(self)
     cpdef SparseArray sqrt(self)
     cpdef SparseArray sq(self)
+    cpdef SparseArray sign(self)
 
     cpdef SparseArray fabs(self)
     cpdef SparseArray ceil(self)

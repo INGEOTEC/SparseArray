@@ -81,6 +81,9 @@ cdef class SparseArray:
     def __len__(self):
         return self._len
 
+    def size(self):
+        return self._len
+
     def full_array(self):
         cdef array.array res = array.clone(self.data, self._len, zero=True)
         cdef Py_ssize_t i
@@ -183,8 +186,32 @@ cdef class SparseArray:
     cpdef SparseArray add(self, SparseArray second):
         return self.union_func(add_op, non_op, non_op, second)
 
+    cpdef SparseArray add2(self, double second):
+        cdef SparseArray res = self.empty(self._len, self._len)
+        cdef Py_ssize_t k, i=0, c=0, j=0
+        cdef unsigned int a_non_zero = self.non_zero
+        cdef unsigned int *a = self.index.data.as_uints
+        cdef double *a_value = self.data.data.as_doubles        
+        cdef double *output_data = res.data.data.as_doubles
+        cdef unsigned int *output_index = res.index.data.as_uints
+        for k in range(self._len):
+            if j < a_non_zero and a[j] == k:
+                res_value = a_value[j] + second
+                j += 1
+            else:
+                res_value = second
+            set_value(output_index, output_data, &c, k, res_value)
+        if c < res.non_zero:
+            res.fix_size(c)
+        return res
+    
     def __add__(self, second):
-        return self.add(second)
+        if isinstance(second, SparseArray):
+            try:
+                return self.add(second)
+            except AttributeError:
+                return second.add2(self)
+        return self.add2(second)
 
     cpdef SparseArray sub(self, SparseArray second):
         return self.union_func(sub_op, non_op, minus_op, second)
@@ -283,7 +310,10 @@ cdef class SparseArray:
 
     cpdef SparseArray sq(self):
         return self.one_argument_func(sq_op, 0)
-    
+
+    cpdef SparseArray sign(self):
+        return self.one_argument_func(sign_op, 0)
+
     cpdef SparseArray fabs(self):
         return self.one_argument_func(math.fabs, 0)
 
