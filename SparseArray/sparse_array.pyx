@@ -281,6 +281,10 @@ cdef class SparseArray:
     cpdef SparseArray atan(self):
         return self.one_argument_func(math.atan, 0)
 
+    cpdef SparseArray atan2(self, SparseArray second):
+        return self.union_func(math.atan2, atan2_left_op,
+                               atan2_right_op, second)
+    
     cpdef SparseArray sinh(self):
         return self.one_argument_func(math.sinh, 0)
 
@@ -292,6 +296,9 @@ cdef class SparseArray:
     
     cpdef SparseArray asinh(self):
         return self.one_argument_func(math.asinh, 0)
+
+    cpdef SparseArray acosh(self):
+        return self.one_argument_func(math.acosh, 1)
 
     cpdef SparseArray atanh(self):
         return self.one_argument_func(math.atanh, 0)

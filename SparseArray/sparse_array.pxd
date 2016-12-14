@@ -53,6 +53,14 @@ cdef inline double div_right_op(double a):
     return 0
 
 
+cdef inline double atan2_left_op(double a):
+    return math.atan2(a, 0)
+
+
+cdef inline double atan2_right_op(double a):
+    return math.atan2(0, a)
+
+
 @cython.cdivision(True)
 cdef inline double div_op(double a, double b):
     return a / b
@@ -110,16 +118,19 @@ cdef class SparseArray:
     cpdef SparseArray div(self, SparseArray second)
     cdef SparseArray one_argument_func(self, one_argument func, bint full)
     
-    cpdef SparseArray sin(self)
-    cpdef SparseArray cos(self)
-    cpdef SparseArray tan(self)
-    cpdef SparseArray asin(self)
     cpdef SparseArray acos(self)
+    cpdef SparseArray asin(self)
     cpdef SparseArray atan(self)
+    cpdef SparseArray atan2(self, SparseArray second)
 
-    cpdef SparseArray sinh(self)
+    cpdef SparseArray cos(self)
+    cpdef SparseArray sin(self)
+    cpdef SparseArray tan(self)
+
     cpdef SparseArray cosh(self)
+    cpdef SparseArray sinh(self)
     cpdef SparseArray tanh(self)
+    cpdef SparseArray acosh(self)
     cpdef SparseArray asinh(self)
     cpdef SparseArray atanh(self)
     

@@ -22,7 +22,8 @@ def random_lst(size=100, p=0.5):
     lst = []
     for i in range(size):
         if random() < p:
-            lst.append(random())
+            c = 1 if random() < 0.5 else -1
+            lst.append(random() * c)
         else:
             lst.append(0)
     return lst
@@ -55,23 +56,30 @@ def test_empty():
     assert len(array.index) == 10
 
 
-def test_sum():
-    for p in [0.5, 1]:
-        a = random_lst(p=p)
-        b = random_lst(p=p)
-        a[10] = 12.433
-        b[10] = -12.433
-        c = SparseArray.fromlist(a) + SparseArray.fromlist(b)
-        res = [x + y for x, y in zip(a, b)]
-        index = [k for k, v in enumerate(res) if v != 0]
-        res = [x for x in res if x != 0]
-        assert c.non_zero == len(res)
-        assert len(c.data) == c.non_zero
-        [assert_almost_equals(v, w) for v, w in zip(index,
-                                                    c.index)]
-        print(c.non_zero, len(c.data), len([x for x in res if x != 0]))
-        [assert_almost_equals(v, w) for v, w in zip([x for x in res if x != 0],
-                                                    c.data)]
+def test_two_args():
+    from math import atan2
+
+    def add(a, b):
+        return a + b
+
+    for f, name in zip([add, atan2], ['add', 'atan2']):
+        for p in [0.5, 1]:
+            a = random_lst(p=p)
+            b = random_lst(p=p)
+            a[10] = 12.433
+            b[10] = -12.433
+            c = getattr(SparseArray.fromlist(a),
+                        name)(SparseArray.fromlist(b))
+            res = [f(x, y) for x, y in zip(a, b)]
+            index = [k for k, v in enumerate(res) if v != 0]
+            res = [x for x in res if x != 0]
+            print(c.non_zero, len(res))
+            assert c.non_zero == len(res)
+            assert len(c.data) == c.non_zero
+            [assert_almost_equals(v, w) for v, w in zip(index,
+                                                        c.index)]
+            [assert_almost_equals(v, w) for v, w in zip([x for x in res if x != 0],
+                                                        c.data)]
 
 
 def test_sub():
@@ -155,26 +163,44 @@ def test_div():
 
 def test_one():
     from math import sin, cos, tan, asin, acos, atan
-    from math import sinh, cosh, tanh, asinh, atanh
+    from math import sinh, cosh, tanh, asinh, acosh, atanh
     from math import exp, expm1, log1p, sqrt
     from math import fabs, ceil, floor, trunc
+    from math import isfinite
+
+    def wrapper(f, v):
+        try:
+            return f(v)
+        except ValueError:
+            if f == sqrt:
+                return float('nan')
+            if v >= 0:
+                return float('inf')
+            else:
+                return -float('inf')
+
+    def compare(a, b):
+        if isfinite(a) and isfinite(b):
+            return assert_almost_equals(a, b)
+        return str(a) == str(b)
+
     for f in [sin, cos, tan, asin, acos, atan,
-              sinh, cosh, tanh, asinh, atanh,
+              sinh, cosh, tanh, asinh, acosh, atanh,
               exp, expm1, log1p, sqrt,
               fabs, ceil, floor, trunc]:
         for p in [0.5, 1]:
             a = random_lst(p=p)
             b = SparseArray.fromlist(a)
             c = getattr(b, f.__name__)()
-            res = [f(x) for x in a]
+            res = [wrapper(f, x) for x in a]
             index = [k for k, v in enumerate(res) if v != 0]
             res = [x for x in res if x != 0]
             print(f, p, c.non_zero, len(res))
             assert c.non_zero == len(res)
             [assert_almost_equals(v, w) for v, w in zip(index,
                                                         c.index)]
-            [assert_almost_equals(v, w) for v, w in zip(res,
-                                                        c.data)]
+            [compare(v, w) for v, w in zip(res,
+                                           c.data)]
 
 
 def test_mul():
