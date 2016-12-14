@@ -2,5 +2,7 @@
 plugins = Cython.Coverage
 omit =
      */tests/*
+     */python2.7/*
+     */python3.5/*
      setup_coverage.py
      array.pxd
