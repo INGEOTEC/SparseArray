@@ -122,7 +122,6 @@ cdef class SparseArray:
     cpdef SparseArray asin(self)
     cpdef SparseArray atan(self)
     cpdef SparseArray atan2(self, SparseArray second)
-
     cpdef SparseArray cos(self)
     cpdef SparseArray sin(self)
     cpdef SparseArray tan(self)
@@ -133,6 +132,8 @@ cdef class SparseArray:
     cpdef SparseArray acosh(self)
     cpdef SparseArray asinh(self)
     cpdef SparseArray atanh(self)
+
+    cpdef SparseArray hypot(self, SparseArray second)
     
     cpdef SparseArray exp(self)
     cpdef SparseArray expm1(self)

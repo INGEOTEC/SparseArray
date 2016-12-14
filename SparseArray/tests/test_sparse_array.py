@@ -57,12 +57,13 @@ def test_empty():
 
 
 def test_two_args():
-    from math import atan2
+    from math import atan2, hypot
 
     def add(a, b):
         return a + b
 
-    for f, name in zip([add, atan2], ['add', 'atan2']):
+    for f, name in zip([add, atan2, hypot],
+                       ['add', 'atan2', 'hypot']):
         for p in [0.5, 1]:
             a = random_lst(p=p)
             b = random_lst(p=p)
@@ -73,7 +74,7 @@ def test_two_args():
             res = [f(x, y) for x, y in zip(a, b)]
             index = [k for k, v in enumerate(res) if v != 0]
             res = [x for x in res if x != 0]
-            print(c.non_zero, len(res))
+            print(c.non_zero, len(res), f)
             assert c.non_zero == len(res)
             assert len(c.data) == c.non_zero
             [assert_almost_equals(v, w) for v, w in zip(index,

@@ -303,6 +303,10 @@ cdef class SparseArray:
     cpdef SparseArray atanh(self):
         return self.one_argument_func(math.atanh, 0)
 
+    cpdef SparseArray hypot(self, SparseArray second):
+        return self.union_func(math.hypot, math.fabs,
+                               math.fabs, second)
+    
     cpdef SparseArray exp(self):
         return self.one_argument_func(math.exp, 1)
 
