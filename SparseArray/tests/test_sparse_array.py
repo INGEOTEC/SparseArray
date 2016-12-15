@@ -165,7 +165,7 @@ def test_div():
 def test_one():
     from math import sin, cos, tan, asin, acos, atan
     from math import sinh, cosh, tanh, asinh, acosh, atanh
-    from math import exp, expm1, log1p, sqrt
+    from math import exp, expm1, log, log2, log10, log1p, sqrt, lgamma
     from math import fabs, ceil, floor, trunc
     from math import isfinite
 
@@ -187,7 +187,8 @@ def test_one():
 
     for f in [sin, cos, tan, asin, acos, atan,
               sinh, cosh, tanh, asinh, acosh, atanh,
-              exp, expm1, log1p, sqrt,
+              exp, expm1, log, log2, log10, log1p, sqrt,
+              lgamma, 
               fabs, ceil, floor, trunc]:
         for p in [0.5, 1]:
             a = random_lst(p=p)

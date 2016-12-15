@@ -306,15 +306,27 @@ cdef class SparseArray:
     cpdef SparseArray hypot(self, SparseArray second):
         return self.union_func(math.hypot, math.fabs,
                                math.fabs, second)
+
+    cpdef SparseArray log(self):
+        return self.one_argument_func(math.log, 1)
+
+    cpdef SparseArray log2(self):
+        return self.one_argument_func(math.log2, 1)
+
+    cpdef SparseArray log10(self):
+        return self.one_argument_func(math.log10, 1)
+
+    cpdef SparseArray log1p(self):
+        return self.one_argument_func(math.log1p, 0)
+
+    cpdef SparseArray lgamma(self):
+        return self.one_argument_func(math.lgamma, 1)
     
     cpdef SparseArray exp(self):
         return self.one_argument_func(math.exp, 1)
 
     cpdef SparseArray expm1(self):
         return self.one_argument_func(math.expm1, 0)
-
-    cpdef SparseArray log1p(self):
-        return self.one_argument_func(math.log1p, 0)
 
     cpdef SparseArray sqrt(self):
         return self.one_argument_func(math.sqrt, 0)

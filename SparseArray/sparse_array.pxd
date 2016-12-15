@@ -137,7 +137,11 @@ cdef class SparseArray:
     
     cpdef SparseArray exp(self)
     cpdef SparseArray expm1(self)
+    cpdef SparseArray log(self)
+    cpdef SparseArray log2(self)
+    cpdef SparseArray log10(self)
     cpdef SparseArray log1p(self)
+    cpdef SparseArray lgamma(self)
     cpdef SparseArray sqrt(self)
     cpdef SparseArray sq(self)
     cpdef SparseArray sign(self)
