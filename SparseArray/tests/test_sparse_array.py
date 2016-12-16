@@ -165,9 +165,14 @@ def test_div():
 def test_one():
     from math import sin, cos, tan, asin, acos, atan
     from math import sinh, cosh, tanh, asinh, acosh, atanh
-    from math import exp, expm1, log, log2, log10, log1p, sqrt, lgamma
+    from math import exp, expm1, log, log10, log1p, sqrt, lgamma
     from math import fabs, ceil, floor, trunc
     from math import isfinite
+    try:
+        from math import log2
+    except ImportError:
+        def log2(x):
+            return log(x) / log(2)
 
     def wrapper(f, v):
         try:
