@@ -337,6 +337,18 @@ cdef class SparseArray:
     cpdef SparseArray sign(self):
         return self.one_argument_func(sign_op, 0)
 
+    cpdef SparseArray boundaries(self):
+        return self.one_argument_func(boundaries_op, 0)
+
+    cpdef SparseArray copy(self):
+        cdef SparseArray r = SparseArray()
+        r._len = self._len
+        r.index = array.copy(self.index)
+        r.data = array.copy(self.data)
+        r.non_zero = self.non_zero
+        return r
+    
+    
     cpdef SparseArray fabs(self):
         return self.one_argument_func(math.fabs, 0)
 

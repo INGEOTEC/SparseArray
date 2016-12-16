@@ -88,6 +88,14 @@ cdef inline double mul_op(double a, double b):
     return a * b
 
 
+cdef inline double boundaries_op(double a):
+    if a > 1:
+        return 1
+    elif a < -1:
+        return -1
+    return a
+
+
 cdef inline void set_value(unsigned int *output_index,
                            double *output_data,
                            Py_ssize_t *c, unsigned int k,
@@ -151,6 +159,8 @@ cdef class SparseArray:
     cpdef SparseArray floor(self)
     cpdef SparseArray trunc(self)
     cpdef SparseArray finite(self)
+    cpdef SparseArray boundaries(self)
+    cpdef SparseArray copy(self)
 
 
     cdef unsigned int intersection_size(self, SparseArray second)

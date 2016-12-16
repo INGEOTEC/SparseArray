@@ -493,3 +493,33 @@ def test_used_maximum_memory():
     assert b.used_memory
     assert b.maximum_memory
 
+
+def test_boundaries():
+    def boundaries(a):
+        if a > 1:
+            return 1
+        elif a < -1:
+            return -1
+        return a
+    
+    a = random_lst(p=0.5)
+    a[10] = 100
+    a[11] = -32.3
+    res = [boundaries(x) for x in a]
+    index = [k for k, v in enumerate(res) if v != 0]
+    res = [x for x in res if x != 0]
+    c = SparseArray.fromlist(a).boundaries()
+    assert c.non_zero == len(res)
+    assert len(c.data) == c.non_zero
+    [assert_almost_equals(v, w) for v, w in zip(index,
+                                                c.index)]
+    print(c.non_zero, len(c.data), len([x for x in res if x != 0]))
+    [assert_almost_equals(v, w) for v, w in zip([x for x in res if x != 0],
+                                                c.data)]
+    
+
+def test_copy():
+    a = random_lst(p=0.5)
+    b = SparseArray.fromlist(a)
+    c = b.copy()
+    assert b.SSE(c) == 0
