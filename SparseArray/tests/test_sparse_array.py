@@ -16,6 +16,16 @@
 from SparseArray import SparseArray
 from nose.tools import assert_almost_equals
 from random import random
+try:
+    from math import isfinite
+except ImportError:
+    import math
+
+    def isfinite(x):
+        if math.isinf(x) or math.isnan(x):
+            return False
+        return True
+
 
 
 def random_lst(size=100, p=0.5):
@@ -167,7 +177,6 @@ def test_one():
     from math import sinh, cosh, tanh, asinh, acosh, atanh
     from math import exp, expm1, log, log10, log1p, sqrt, lgamma
     from math import fabs, ceil, floor, trunc
-    from math import isfinite
     try:
         from math import log2
     except ImportError:
@@ -298,16 +307,6 @@ def test_unit_vector():
 
 
 def test_finite():
-    try:
-        from math import isfinite
-    except ImportError:
-        import math
-
-        def isfinite(x):
-            if math.isinf(x) or math.isnan(x):
-                return False
-            return True
-
     a = SparseArray.fromlist(random_lst(p=0.5))
     b = SparseArray.fromlist(random_lst(p=0.5))
     c = a / b
