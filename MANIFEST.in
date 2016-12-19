@@ -1,2 +1,4 @@
 include VERSION
 include LICENSE
+include SparseArray/*.pxd
+include SparseArray/*.pyx

@@ -168,6 +168,7 @@ cdef class SparseArray:
                                        SparseArray second)
     cpdef SparseArray mul(self, SparseArray second)
     cpdef SparseArray mul2(self, double second)
+    cpdef double dot(self, SparseArray second)
 
     cpdef double sum(self)
     cpdef SparseArray unit_vector(self)

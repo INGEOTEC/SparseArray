@@ -445,6 +445,30 @@ cdef class SparseArray:
                 return second.mul2(self)
         return self.mul2(second)
 
+    cpdef double dot(self, SparseArray second):
+        cdef Py_ssize_t i = 0, j = 0, c = 0, k
+        cdef unsigned int a_non_zero = self.non_zero
+        cdef unsigned int b_non_zero = second.non_zero
+        cdef unsigned int *a = self.index.data.as_uints
+        cdef unsigned int *b = second.index.data.as_uints
+        cdef double *a_value = self.data.data.as_doubles
+        cdef double *b_value = second.data.data.as_doubles
+        cdef double res_value = 0
+        if self._len == a_non_zero and self._len == b_non_zero:
+            for k in range(a_non_zero):
+                res_value += a_value[k] * b_value[k]
+            return res_value
+        while (i < a_non_zero) and (j < b_non_zero):
+            if a[i] == b[j]:
+                res_value += a_value[i] * b_value[j]
+                i += 1
+                j += 1
+            elif a[i] < b[j]:
+                i += 1
+            else:
+                j += 1
+        return res_value
+         
     cpdef bint isfinite(self):
         cdef double *a_value = self.data.data.as_doubles
         cdef Py_ssize_t i = 0

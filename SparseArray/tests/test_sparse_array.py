@@ -527,3 +527,11 @@ def test_copy():
     b = SparseArray.fromlist(a)
     c = b.copy()
     assert b.SSE(c) == 0
+
+
+def test_dot():
+    for p in [0.5, 1]:
+        a = SparseArray.fromlist(random_lst(p=p))
+        b = SparseArray.fromlist(random_lst(p=p))
+        assert (a * b).sum() == a.dot(b)
+    
