@@ -21,8 +21,8 @@ from cpython cimport array
 cpdef rebuild(data, index, size):
     cdef SparseArray r = SparseArray()
     r._len = size
-    r.data = data
-    r.index = index
+    r.data = array.copy(data)
+    r.index = array.copy(index)
     r.non_zero = len(index)
     return r
 
