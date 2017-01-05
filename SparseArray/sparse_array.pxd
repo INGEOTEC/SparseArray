@@ -113,6 +113,7 @@ cdef class SparseArray:
     cdef public array.array data
     cdef void _empty(self, unsigned int len, unsigned int non_zero)
     cdef void fix_size(self, unsigned int new_size)
+    cdef double getitem(self, unsigned int k)
     cdef unsigned int union_size(self, SparseArray second)
     cdef SparseArray union_func(self, two_arguments func,
                                 one_argument left,

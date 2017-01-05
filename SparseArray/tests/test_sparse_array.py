@@ -27,7 +27,6 @@ except ImportError:
         return True
 
 
-
 def random_lst(size=100, p=0.5):
     lst = []
     for i in range(size):
@@ -534,4 +533,11 @@ def test_dot():
         a = SparseArray.fromlist(random_lst(p=p))
         b = SparseArray.fromlist(random_lst(p=p))
         assert (a * b).sum() == a.dot(b)
-    
+
+
+def test_getitem():
+    for p in [0.5, 1]:
+        a = random_lst(p=p)
+        b = SparseArray.fromlist(a)
+        print(a, b.full_array())
+        [assert_almost_equals(v, b[k]) for k, v in enumerate(a)]

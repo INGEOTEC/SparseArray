@@ -21,8 +21,8 @@ from cpython cimport array
 cpdef rebuild(data, index, size):
     cdef SparseArray r = SparseArray()
     r._len = size
-    r.data = array.copy(data)
-    r.index = array.copy(index)
+    r.data = data
+    r.index = index
     r.non_zero = len(index)
     return r
 
@@ -77,6 +77,29 @@ cdef class SparseArray:
     @property
     def maximum_memory(self):
         return self.data.itemsize * self._len + self.index.itemsize * self._len
+
+    cdef double getitem(self, unsigned int k):
+        cdef unsigned int start=0, end=self.non_zero, half
+        cdef unsigned int *a = self.index.data.as_uints
+        cdef double *a_value = self.data.data.as_doubles
+        if k > self._len:
+            return 0
+        while end - start > 1:
+            half = start + (end - start) / 2
+            if a[half] > k:
+                end = half
+            elif a[half] < k:
+                start = half
+            else:
+                return a_value[half]
+        if a[start] == k:
+            return a_value[start]
+        elif a[end] == k:
+            return a_value[end]
+        return 0
+
+    def __getitem__(self, i):
+        return self.getitem(i)
     
     def __len__(self):
         return self._len
