@@ -175,7 +175,7 @@ def test_one():
     from math import sin, cos, tan, asin, acos, atan
     from math import sinh, cosh, tanh, asinh, acosh, atanh
     from math import exp, expm1, log, log10, log1p, sqrt, lgamma
-    from math import fabs, ceil, floor, trunc
+    from math import fabs, ceil, floor, trunc, erf, erfc
     try:
         from math import log2
     except ImportError:
@@ -201,8 +201,9 @@ def test_one():
     for f in [sin, cos, tan, asin, acos, atan,
               sinh, cosh, tanh, asinh, acosh, atanh,
               exp, expm1, log, log2, log10, log1p, sqrt,
-              lgamma, 
-              fabs, ceil, floor, trunc]:
+              lgamma,
+              fabs, ceil, floor, trunc,
+              erf, erfc]:
         for p in [0.5, 1]:
             a = random_lst(p=p)
             b = SparseArray.fromlist(a)

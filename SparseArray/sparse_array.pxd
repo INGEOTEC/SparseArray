@@ -150,7 +150,10 @@ cdef class SparseArray:
     cpdef SparseArray log2(self)
     cpdef SparseArray log10(self)
     cpdef SparseArray log1p(self)
+    
     cpdef SparseArray lgamma(self)
+
+    # double pow(double x, double y)
     cpdef SparseArray sqrt(self)
     cpdef SparseArray sq(self)
     cpdef SparseArray sign(self)
@@ -159,6 +162,10 @@ cdef class SparseArray:
     cpdef SparseArray ceil(self)
     cpdef SparseArray floor(self)
     cpdef SparseArray trunc(self)
+
+    cpdef SparseArray erf(self)
+    cpdef SparseArray erfc(self)
+    
     cpdef SparseArray finite(self)
     cpdef SparseArray boundaries(self)
     cpdef SparseArray copy(self)

@@ -384,6 +384,12 @@ cdef class SparseArray:
     cpdef SparseArray trunc(self):
         return self.one_argument_func(math.trunc, 0)
 
+    cpdef SparseArray erf(self):
+        return self.one_argument_func(math.erf, 0)
+
+    cpdef SparseArray erfc(self):
+        return self.one_argument_func(math.erfc, 1)
+    
     cpdef SparseArray finite(self):
         return self.one_argument_func(finite_op, 0)
     
