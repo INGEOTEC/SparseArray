@@ -547,3 +547,15 @@ def test_getitem():
         b = SparseArray.fromlist(a)
         print(a, b.full_array())
         [assert_almost_equals(v, b[k]) for k, v in enumerate(a)]
+
+
+def test_finite_inplace():
+    a = SparseArray.fromlist(random_lst())
+    b = SparseArray.fromlist(random_lst())
+    c = a / b
+    d = c.finite()
+    c.finite(inplace=True)
+    assert c.isfinite()
+    assert c.SSE(d) == 0
+    assert len(c.index) == len(d.index)
+    

@@ -172,7 +172,7 @@ cdef class SparseArray:
     cpdef SparseArray erf(self)
     cpdef SparseArray erfc(self)
     
-    cpdef SparseArray finite(self)
+    cpdef SparseArray finite(self, bint inplace=?)
     cpdef SparseArray boundaries(self)
     cpdef SparseArray copy(self)
 

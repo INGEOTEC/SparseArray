@@ -443,9 +443,23 @@ cdef class SparseArray:
     cpdef SparseArray erfc(self):
         return self.one_argument_func(math.erfc, 1)
     
-    cpdef SparseArray finite(self):
-        return self.one_argument_func(finite_op, 0)
-    
+    cpdef SparseArray finite(self, bint inplace=False):
+        if not inplace:
+            return self.one_argument_func(finite_op, 0)
+        cdef unsigned int a_non_zero = self.non_zero
+        cdef unsigned int *a = self.index.data.as_uints
+        cdef double *a_value = self.data.data.as_doubles
+        cdef Py_ssize_t i = 0, j = 0
+        for i in range(a_non_zero):
+            if math.isfinite(a_value[i]):
+                if i > j:
+                    a_value[j] = a_value[i]
+                    a[j] = a[i]
+                j += 1
+        if j < a_non_zero:
+            self.fix_size(j)
+        return self
+ 
     cdef unsigned int intersection_size(self, SparseArray second):
         cdef Py_ssize_t i = 0, j = 0, c = 0
         cdef unsigned int a_non_zero = self.non_zero
