@@ -18,8 +18,6 @@ from libc cimport math
 ctypedef double (*two_arguments)(double, double)
 ctypedef double (*one_argument)(double)
 
-# use Py_ssize_t instead of int to index
-
 
 cdef inline double non_op(double a):
     return a

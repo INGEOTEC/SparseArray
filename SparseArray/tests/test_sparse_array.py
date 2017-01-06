@@ -16,10 +16,10 @@
 from SparseArray import SparseArray
 from nose.tools import assert_almost_equals
 from random import random
+import math
 try:
     from math import isfinite
 except ImportError:
-    import math
 
     def isfinite(x):
         if math.isinf(x) or math.isnan(x):
@@ -159,20 +159,21 @@ def test_div():
             if a == b:
                 return float('nan')
             return float('inf')
-        
+
     for p in [0.5, 1]:
         a = random_lst(p=p)
         b = random_lst(p=p)
         c = SparseArray.fromlist(a) / SparseArray.fromlist(b)
         res = [div(x, y) for x, y in zip(a, b)]
-        index = [k for k, v in enumerate(res)
-                 if v != 0 and (a[k] != 0 or b[k] != 0)]
+        print(c.data)
+        print(res)
+        index = [k for k, v in enumerate(res) if v != 0]  # and (a[k] != 0 or b[k] != 0)]
         res = [res[x] for x in index]
         assert c.non_zero == len(res)
         [assert_almost_equals(v, w) for v, w in zip(index,
                                                     c.index)]
-        [assert_almost_equals(v, w) for v, w in zip([x for x in res if x != 0],
-                                                    c.data)]
+        [assert_almost_equals(v, w) for v, w in zip([x for x in res if not math.isnan(x)],
+                                                    [x for x in c.data if not math.isnan(x)])]
 
 
 def test_one():

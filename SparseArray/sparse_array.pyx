@@ -249,7 +249,9 @@ cdef class SparseArray:
         return self.union_func(math.fmax, zero_max_op, zero_max_op, second)
 
     cpdef SparseArray div(self, SparseArray second):
-        return self.union_func(div_op, div_left_op, div_right_op, second)
+        return self.full_func(div_op, div_left_op, div_right_op, second)
+    # return self.union_func(div_op, div_left_op, div_right_op, second)
+
 
     def __div__(self, other):
         return self.div(other)
