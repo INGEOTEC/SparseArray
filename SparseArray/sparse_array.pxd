@@ -96,6 +96,14 @@ cdef inline double boundaries_op(double a):
     return a
 
 
+cdef inline double pow_left_op(double a):
+    return 1.0
+
+
+cdef inline double pow_right_op(double a):
+    return 0.0
+
+
 cdef inline void set_value(unsigned int *output_index,
                            double *output_data,
                            Py_ssize_t *c, unsigned int k,
@@ -153,7 +161,7 @@ cdef class SparseArray:
     
     cpdef SparseArray lgamma(self)
 
-    # double pow(double x, double y)
+    cpdef SparseArray pow(self, SparseArray second)
     cpdef SparseArray sqrt(self)
     cpdef SparseArray sq(self)
     cpdef SparseArray sign(self)
@@ -174,6 +182,10 @@ cdef class SparseArray:
     cdef unsigned int intersection_size(self, SparseArray second)
     cdef SparseArray intersection_func(self, two_arguments func,
                                        SparseArray second)
+    cdef SparseArray full_func(self, two_arguments func,
+                               one_argument left,
+                               one_argument right,                               
+                               SparseArray second)
     cpdef SparseArray mul(self, SparseArray second)
     cpdef SparseArray mul2(self, double second)
     cpdef double dot(self, SparseArray second)

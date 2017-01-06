@@ -127,8 +127,8 @@ cdef class SparseArray:
     cdef void _empty(self, unsigned int len, unsigned int non_zero):
         self._len = len
         self.non_zero = non_zero
-        array.resize(self.index, self.non_zero)
-        array.resize(self.data, self.non_zero)
+        self.index = array.clone(self.index, self.non_zero, zero=False)
+        self.data = array.clone(self.data, self.non_zero, zero=False)
 
     cdef void fix_size(self, unsigned int new_size):
         array.resize(self.index, new_size)
@@ -351,6 +351,57 @@ cdef class SparseArray:
     cpdef SparseArray expm1(self):
         return self.one_argument_func(math.expm1, 0)
 
+    cdef SparseArray full_func(self, two_arguments func,
+                               one_argument left,
+                               one_argument right,                               
+                               SparseArray second):
+        cdef SparseArray res = self.empty(self._len, self._len)
+        cdef Py_ssize_t k, i=0, c=0, j=0
+        cdef unsigned int a_non_zero = self.non_zero
+        cdef unsigned int b_non_zero = second.non_zero
+        cdef unsigned int *a = self.index.data.as_uints
+        cdef unsigned int *b = second.index.data.as_uints
+        cdef double *a_value = self.data.data.as_doubles
+        cdef double *b_value = second.data.data.as_doubles
+        cdef double *output_data = res.data.data.as_doubles
+        cdef double zero_value = func(0, 0)
+        cdef unsigned int *output_index = res.index.data.as_uints
+        for k in range(self._len):
+            if i < a_non_zero and j < b_non_zero:
+                if a[i] == k:
+                    if k == b[j]:
+                        res_value = func(a_value[i], b_value[j])
+                        j += 1
+                    else:
+                        res_value = left(a_value[i])
+                    i += 1    
+                elif b[j] == k:
+                    res_value = right(b_value[j])
+                    j += 1
+                else:
+                    res_value = zero_value
+            elif i < a_non_zero:
+                if a[i] == k:
+                    res_value = left(a_value[i])
+                    i += 1
+                else:
+                    res_value = zero_value
+            elif j < b_non_zero:
+                if b[j] == k:
+                    res_value = right(b_value[j])
+                    j += 1
+                else:
+                    res_value = zero_value
+            else:
+                res_value = zero_value
+            set_value(output_index, output_data, &c, k, res_value)
+        if c < res.non_zero:
+            res.fix_size(c)
+        return res
+
+    cpdef SparseArray pow(self, SparseArray second):
+        return self.full_func(math.pow, pow_left_op, pow_right_op, second)
+    
     cpdef SparseArray sqrt(self):
         return self.one_argument_func(math.sqrt, 0)
 

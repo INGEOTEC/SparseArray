@@ -27,11 +27,13 @@ except ImportError:
         return True
 
 
-def random_lst(size=100, p=0.5):
+def random_lst(size=100, p=0.5, neg=True):
     lst = []
     for i in range(size):
         if random() < p:
-            c = 1 if random() < 0.5 else -1
+            c = 1 if neg and random() < 0.5 else -1
+            if not neg:
+                c = 1
             lst.append(random() * c)
         else:
             lst.append(0)
@@ -66,16 +68,16 @@ def test_empty():
 
 
 def test_two_args():
-    from math import atan2, hypot
+    from math import atan2, hypot, pow
 
     def add(a, b):
         return a + b
 
-    for f, name in zip([add, atan2, hypot],
-                       ['add', 'atan2', 'hypot']):
+    for f, name in zip([add, atan2, hypot, pow],
+                       ['add', 'atan2', 'hypot', 'pow']):
         for p in [0.5, 1]:
-            a = random_lst(p=p)
-            b = random_lst(p=p)
+            a = random_lst(p=p, neg=False)
+            b = random_lst(p=p, neg=False)
             a[10] = 12.433
             b[10] = -12.433
             c = getattr(SparseArray.fromlist(a),
@@ -84,6 +86,8 @@ def test_two_args():
             index = [k for k, v in enumerate(res) if v != 0]
             res = [x for x in res if x != 0]
             print(c.non_zero, len(res), f)
+            print(c.data)
+            print(res, len(res))
             assert c.non_zero == len(res)
             assert len(c.data) == c.non_zero
             [assert_almost_equals(v, w) for v, w in zip(index,
