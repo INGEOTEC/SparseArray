@@ -342,6 +342,27 @@ def test_cumsum():
                                                     d.data)]
 
 
+def test_cummul():
+    for p in [0.5, 1]:
+        a = random_lst(p=p)
+        b = random_lst(p=p)
+        c = random_lst(p=p)
+
+        d = SparseArray.cummul([SparseArray.fromlist(a),
+                                SparseArray.fromlist(b),
+                                SparseArray.fromlist(c)])
+        res = [x * y * z for x, y, z in zip(a, b, c)]
+        index = [k for k, v in enumerate(res) if v != 0]
+        res = [x for x in res if x != 0]
+        assert d.non_zero == len(res)
+        assert len(d.data) == d.non_zero
+        [assert_almost_equals(v, w) for v, w in zip(index,
+                                                    d.index)]
+        print(d.non_zero, len(d.data), len([x for x in res if x != 0]))
+        [assert_almost_equals(v, w) for v, w in zip([x for x in res if x != 0],
+                                                    d.data)]
+
+
 def test_cummin():
     for p in [0.5, 1]:
         a = random_lst(p=p)

@@ -614,6 +614,14 @@ cdef class SparseArray:
         return a
 
     @staticmethod
+    def cummul(list lst):
+        cdef SparseArray r
+        a = (lst[0]).mul(lst[1])
+        for r in lst[2:]:
+            a = a.mul(r)
+        return a
+
+    @staticmethod
     def cummin(list lst):
         cdef SparseArray r
         a = (lst[0]).min(lst[1])
