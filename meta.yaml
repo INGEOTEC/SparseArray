@@ -1,6 +1,6 @@
 package:
   name: sparsearray
-  version: "0.8.4"
+  version: "0.8.9"
 
 build:
   number: 0
@@ -9,7 +9,6 @@ requirements:
   build:
     - python
     - setuptools
-    - numpy
     - cython
 
   run:
