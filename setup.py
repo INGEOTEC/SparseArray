@@ -53,6 +53,5 @@ setup(
     packages=['SparseArray', 'SparseArray/tests'],
     include_package_data=True,
     zip_safe=False,
-    package_data={'': ['*.pxd']},
-    install_requires=['cython >= 0.19.2']
+    package_data={'': ['*.pxd']}
 )
