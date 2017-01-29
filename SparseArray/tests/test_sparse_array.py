@@ -579,4 +579,35 @@ def test_finite_inplace():
     assert c.isfinite()
     assert c.SSE(d) == 0
     assert len(c.index) == len(d.index)
+
+
+def test_argmax():
+    try:
+        import numpy as np
+    except ImportError:
+        return
+    a = SparseArray.fromlist(random_lst())
+    b = SparseArray.fromlist(random_lst())
+    c = SparseArray.fromlist(random_lst())
+    todos = np.vstack([a.full_array(), b.full_array(),
+                       c.full_array()])
+    res = todos.argmax(axis=0)
+    sp_res = a.argmax([b, c])
+    [assert_almost_equals(x, y) for x, y in zip(res, sp_res.full_array())]
+
+
+def test_argmin():
+    try:
+        import numpy as np
+    except ImportError:
+        return
+    a = SparseArray.fromlist(random_lst())
+    b = SparseArray.fromlist(random_lst())
+    c = SparseArray.fromlist(random_lst())
+    todos = np.vstack([a.full_array(), b.full_array(),
+                       c.full_array()])
+    res = todos.argmin(axis=0)
+    sp_res = a.argmin([b, c])
+    [assert_almost_equals(x, y) for x, y in zip(res, sp_res.full_array())]
+
     

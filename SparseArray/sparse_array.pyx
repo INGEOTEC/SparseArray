@@ -16,7 +16,7 @@
 cimport cython
 import types
 from cpython cimport array
-
+from cpython.list cimport PyList_GET_SIZE, PyList_GET_ITEM
 
 cpdef rebuild(data, index, size):
     cdef SparseArray r = SparseArray()
@@ -572,6 +572,56 @@ cdef class SparseArray:
             if not math.isfinite(a_value[i]):
                 return False
         return True
+
+    cpdef SparseArray argmax(self, list lst):
+        cdef Py_ssize_t i, k, j
+        cdef array.array best = self.full_array()
+        cdef double *best_C = best.data.as_doubles, *comp, value
+        cdef array.array best_index = array.clone(self.index, self._len, zero=True)
+        cdef unsigned int *best_index_C = best_index.data.as_uints, *comp_index
+        cdef unsigned int end
+        cdef SparseArray next
+        for j in range(PyList_GET_SIZE(lst)):
+            next = <SparseArray> PyList_GET_ITEM(lst, j)
+            comp = next.data.data.as_doubles
+            comp_index = next.index.data.as_uints
+            end = next.non_zero
+            k = 0
+            for i in range(self._len):
+                value = 0
+                if k < end:
+                    if comp_index[k] == i:
+                        value = comp[k]
+                        k += 1
+                if value > best_C[i]:
+                    best_C[i] = value
+                    best_index_C[i] = j + 1
+        return SparseArray.fromlist(best_index)
+
+    cpdef SparseArray argmin(self, list lst):
+        cdef Py_ssize_t i, k, j
+        cdef array.array best = self.full_array()
+        cdef double *best_C = best.data.as_doubles, *comp, value
+        cdef array.array best_index = array.clone(self.index, self._len, zero=True)
+        cdef unsigned int *best_index_C = best_index.data.as_uints, *comp_index
+        cdef unsigned int end
+        cdef SparseArray next
+        for j in range(PyList_GET_SIZE(lst)):
+            next = <SparseArray> PyList_GET_ITEM(lst, j)
+            comp = next.data.data.as_doubles
+            comp_index = next.index.data.as_uints
+            end = next.non_zero
+            k = 0
+            for i in range(self._len):
+                value = 0
+                if k < end:
+                    if comp_index[k] == i:
+                        value = comp[k]
+                        k += 1
+                if value < best_C[i]:
+                    best_C[i] = value
+                    best_index_C[i] = j + 1
+        return SparseArray.fromlist(best_index)            
 
     cpdef double sum(self):
         cdef double *a_value = self.data.data.as_doubles

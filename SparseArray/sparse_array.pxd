@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from cpython cimport array
+from cpython cimport list
 cimport cython
 from libc cimport math
 ctypedef double (*two_arguments)(double, double)
@@ -194,3 +195,5 @@ cdef class SparseArray:
     cpdef double SAE(self, SparseArray second)
     
     cpdef bint isfinite(self)
+    cpdef SparseArray argmax(self, list lst)
+    cpdef SparseArray argmin(self, list lst)
