@@ -1,6 +1,6 @@
 package:
   name: sparsearray
-  version: "0.8.10"
+  version: "0.8.11"
 
 build:
   number: 0
