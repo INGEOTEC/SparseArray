@@ -592,7 +592,7 @@ def test_argmax():
     todos = np.vstack([a.full_array(), b.full_array(),
                        c.full_array()])
     res = todos.argmax(axis=0)
-    sp_res = a.argmax([b, c])
+    sp_res = SparseArray.argmax([a, b, c])
     [assert_almost_equals(x, y) for x, y in zip(res, sp_res.full_array())]
 
 
@@ -607,7 +607,7 @@ def test_argmin():
     todos = np.vstack([a.full_array(), b.full_array(),
                        c.full_array()])
     res = todos.argmin(axis=0)
-    sp_res = a.argmin([b, c])
+    sp_res = SparseArray.argmin([a, b, c])
     [assert_almost_equals(x, y) for x, y in zip(res, sp_res.full_array())]
 
     

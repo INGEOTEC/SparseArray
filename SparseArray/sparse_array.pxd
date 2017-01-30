@@ -195,5 +195,3 @@ cdef class SparseArray:
     cpdef double SAE(self, SparseArray second)
     
     cpdef bint isfinite(self)
-    cpdef SparseArray argmax(self, list lst)
-    cpdef SparseArray argmin(self, list lst)
