@@ -65,6 +65,21 @@ cdef class SparseArray:
         r.data = array.array('d', [x[1] for x in index_data])
         r.non_zero = len(index_data)
         return r
+
+    @classmethod
+    def constant(cls, value, index, size):
+        cdef SparseArray r = cls()
+        cdef double *data_value 
+        cdef Py_ssize_t i, index_size = len(index)
+        r._len = size
+        r.non_zero = index_size
+        r.index = array.array('I', index)
+        r.data = array.clone(r.data, index_size, zero=False)
+        data_value = r.data.data.as_doubles
+        for i in range(index_size):
+            data_value[i] = value
+        return r
+        
         
     @property
     def density(self):

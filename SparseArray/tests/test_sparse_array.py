@@ -610,4 +610,14 @@ def test_argmin():
     sp_res = SparseArray.argmin([a, b, c])
     [assert_almost_equals(x, y) for x, y in zip(res, sp_res.full_array())]
 
-    
+
+def test_constant():
+    index = [x for x in range(0, 100, 10)]
+    a = SparseArray.constant(-2.3, index, 100)
+    for v, w in zip(a.index, index):
+        assert_almost_equals(v, w)
+    for v in a.data:
+        assert_almost_equals(v, -2.3)
+    assert len(a) == 100
+    assert a.non_zero == 10
+
