@@ -15,6 +15,7 @@
 
 cimport cython
 import types
+import math
 from cpython cimport array
 from cpython.list cimport PyList_GET_SIZE, PyList_GET_ITEM
 
@@ -667,6 +668,52 @@ cdef class SparseArray:
         if c < res.non_zero:
             res.fix_size(c)
         return res
+    
+    cpdef double cosine_distance(self,SparseArray second):
+        cdef double p = self.dot(second)
+        p /= math.sqrt(self.dot(self)) * math.sqrt(second.dot(second))
+        return 1-abs(p)
+    
+    cpdef double pearson_coefficient(self, SparseArray second):
+        cdef double xy = 0
+        cdef double x = 0
+        cdef double y = 0
+        cdef double *x_value = self.data.data.as_doubles
+        cdef double *y_value = second.data.data.as_doubles
+        cdef unsigned int *x_index = self.index.data.as_uints
+        cdef unsigned int *y_index = second.index.data.as_uints
+        cdef double xm = self.sum()/self._len
+        cdef double ym = second.sum()/second._len
+        cdef Py_ssize_t i = 0, j = 0, k
+        cdef Py_ssize_t cont = 0
+        for k in range(self.non_zero):
+            x+= sq_op(x_value[k]-xm)
+        x+= (self._len-self.non_zero)*sq_op(xm)
+        for k in range(second.non_zero):
+            y+= sq_op(y_value[k]-ym)
+        y+= (second._len-second.non_zero)*sq_op(ym)
+        while (i<self.non_zero) and (j<second.non_zero):
+            if x_index[i] == y_index[j]:
+                xy+= (x_value[i]-xm)*(y_value[j]-ym)
+                i += 1
+                j += 1
+            elif x_index[i] < y_index[j]:
+                xy+= (x_value[i]-xm)*(-ym)
+                i += 1
+            elif x_index[i] > y_index[j]:
+                xy+= (-xm)*(y_value[j]-ym)
+                j += 1
+            cont += 1
+        if i==self.non_zero:
+            for k in range(j,second.non_zero):
+                xy+= (-xm)*(y_value[k]-ym)
+                cont += 1
+        else:
+            for k in range(i,self.non_zero):
+                xy+= (x_value[k]-xm)*(-ym)
+                cont += 1
+        xy+= (second._len-cont)*(-xm)*(-ym)
+        return xy/math.sqrt(x*y)
 
     cpdef double SSE(self, SparseArray second):
         return self.sub(second).sq().sum()
