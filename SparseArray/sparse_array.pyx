@@ -671,6 +671,10 @@ cdef class SparseArray:
     
     cpdef double cosine_distance(self,SparseArray second):
         cdef double p = self.dot(second)
+        cdef double p1 = math.sqrt(self.dot(self))
+        cdef double p2 = math.sqrt(second.dot(second))
+        if p == 0 or p1 == 0 or p2 == 0:
+            return 1.0
         p /= math.sqrt(self.dot(self)) * math.sqrt(second.dot(second))
         return 1-abs(p)
     
