@@ -62,7 +62,9 @@ build_script:
 test: off
 test_script:
   - "set CFLAGS=/Od"
-  - "%PYTHON%\\python.exe setup_coverage.py build_ext --inplace"
+  - "%PYTHON%\\python.exe setup.py build_ext --inplace"
+  - "%PYTHON%\\nosetests.exe EvoDAG"
+  
 
 artifacts:
   - path: dist\*
