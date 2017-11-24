@@ -51,7 +51,6 @@ init:
   - "ECHO Python %PYTHON_VERSION% (%PYTHON_ARCH%bit) from %PYTHON%"
 
 install:
-  - "powershell appveyor\\install.ps1"
   - "%PYTHON%\\python.exe --version"
   - "%PYTHON%\\Scripts\\pip.exe --version"
   - "%PYTHON%\\Scripts\\wheel.exe version"
