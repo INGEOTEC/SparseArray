@@ -1,0 +1,28 @@
+package:
+  name: sparsearray
+  # the version is actually being set by the __conda_version__.txt file
+  # http://conda.pydata.org/docs/build.html#post-build-version
+
+requirements:
+  build:
+    - python
+    - cython
+    - setuptools
+
+  run:
+    - python
+
+test:
+    requires:
+        - nose
+        - numpy
+        - cython	
+    imports:
+        - SparseArray	
+    commands:
+        - nosetests --exe SparseArray
+
+about:
+  home: https://github.com/mgraffg
+  summary: SparseArray
+  license: Apache

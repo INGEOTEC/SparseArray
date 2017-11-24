@@ -15,6 +15,7 @@
 from setuptools import setup
 from Cython.Build import cythonize
 from os.path import join
+import os
 
 
 long_desc = 'SparseArray'
@@ -26,6 +27,12 @@ for k in range(len(lst)):
         lst[k] = "__version__ = '%s'\n" % version
 with open(join("SparseArray", "__init__.py"), "w") as fpt:
     fpt.write("".join(lst))
+
+
+if os.environ['CONDA_BUILD']:
+    with open('__conda_version__.txt', 'w') as f:
+        f.write(version)
+    
 
 setup(
     name="SparseArray",
