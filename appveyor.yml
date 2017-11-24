@@ -62,7 +62,7 @@ build_script:
 test: off
 test_script:
   - "set CFLAGS=/Od"
-  - "%WITH_ENV% %PYTHON%\\python.exe setup_coverage.py build_ext --inplace"
+  - "%PYTHON%\\python.exe setup_coverage.py build_ext --inplace"
 
 artifacts:
   - path: dist\*
