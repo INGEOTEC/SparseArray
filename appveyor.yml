@@ -45,7 +45,6 @@ clone_depth: 5
 branches:
   only:
     - master
-    - release
 
 init:
   - "ECHO Python %PYTHON_VERSION% (%PYTHON_ARCH%bit) from %PYTHON%"
@@ -56,14 +55,12 @@ install:
 
 build: off
 build_script:
-  - "%WITH_ENV% %PYTHON%\\python.exe setup.py build_ext --inplace"
-  - "%WITH_ENV% %PYTHON%\\python.exe setup.py bdist_wheel"
-
-test: off
-test_script:
   - "%PYTHON%\\Scripts\\pip.exe install cython"
   - "%PYTHON%\\Scripts\\pip.exe install coverage"
   - "%PYTHON%\\Scripts\\pip.exe install coveralls"
+
+test: off
+test_script:
   - "set CFLAGS=/Od"
   - "%WITH_ENV% %PYTHON%\\python.exe setup_coverage.py build_ext --inplace"
 
