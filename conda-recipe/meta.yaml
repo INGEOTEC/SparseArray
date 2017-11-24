@@ -1,6 +1,6 @@
 package:
   name: sparsearray
-  version: "0.8.13"  
+  version: "0.8.13"
 
 requirements:
   build:
@@ -15,9 +15,9 @@ test:
     requires:
         - nose
         - numpy
-        - cython	
+        - cython
     imports:
-        - SparseArray	
+        - SparseArray
     commands:
         - nosetests --exe SparseArray
 
