@@ -628,4 +628,15 @@ def test_cosine_distance():
     r = a.cosine_distance(b)
     r1 = a.dot(b) / (math.sqrt(a.dot(a)) * math.sqrt(b.dot(b)))
     assert_almost_equals(r, 1 - math.fabs(r1))
+
+
+def test_pearson_coefficient():
+    a = SparseArray.fromlist(random_lst())
+    b = SparseArray.fromlist(random_lst())
+    r = a.pearson_coefficient(b)
+    num = len(a) * a.dot(b) - a.sum() * b.sum()
+    p = len(a) * a.dot(a) - math.pow(a.sum(), 2)
+    s = len(b) * b.dot(b) - math.pow(b.sum(), 2)
+    r1 = num / (math.sqrt(p) * math.sqrt(s))
+    assert_almost_equals(r, r1)
     
