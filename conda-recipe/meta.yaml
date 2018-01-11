@@ -1,0 +1,27 @@
+package:
+  name: sparsearray
+  version: "0.8.13"
+
+requirements:
+  build:
+    - python
+    - cython
+    - setuptools
+
+  run:
+    - python
+
+test:
+    requires:
+        - nose
+        - numpy
+        - cython
+    imports:
+        - SparseArray
+    commands:
+        - nosetests --exe SparseArray
+
+about:
+  home: https://github.com/mgraffg
+  summary: SparseArray
+  license: Apache
