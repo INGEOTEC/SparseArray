@@ -15,7 +15,6 @@
 
 cimport cython
 import types
-import math
 from cpython cimport array
 from cpython.list cimport PyList_GET_SIZE, PyList_GET_ITEM
 
@@ -661,7 +660,7 @@ cdef class SparseArray:
         cdef double *output_data = res.data.data.as_doubles
         cdef unsigned int *output_index = res.index.data.as_uints
         cdef double res_value
-        cdef double norm = math.sqrt(self.sq().sum())
+        cdef double norm = math.sqrt(self.dot(self))
         for k in range(self.non_zero):
             res_value = a_value[k] / norm
             set_value(output_index, output_data, &c, a[k], res_value)
@@ -669,14 +668,14 @@ cdef class SparseArray:
             res.fix_size(c)
         return res
     
-    cpdef double cosine_distance(self,SparseArray second):
+    cpdef double cosine_distance(self, SparseArray second):
         cdef double p = self.dot(second)
         cdef double p1 = math.sqrt(self.dot(self))
         cdef double p2 = math.sqrt(second.dot(second))
         if p == 0 or p1 == 0 or p2 == 0:
             return 1.0
-        p /= math.sqrt(self.dot(self)) * math.sqrt(second.dot(second))
-        return 1-abs(p)
+        p = p / (p1 * p2)
+        return 1 - math.fabs(p)
     
     cpdef double pearson_coefficient(self, SparseArray second):
         cdef double xy = 0
@@ -686,8 +685,8 @@ cdef class SparseArray:
         cdef double *y_value = second.data.data.as_doubles
         cdef unsigned int *x_index = self.index.data.as_uints
         cdef unsigned int *y_index = second.index.data.as_uints
-        cdef double xm = self.sum()/self._len
-        cdef double ym = second.sum()/second._len
+        cdef double xm = self.sum() / self._len
+        cdef double ym = second.sum() / second._len
         cdef Py_ssize_t i = 0, j = 0, k
         cdef Py_ssize_t cont = 0
         for k in range(self.non_zero):

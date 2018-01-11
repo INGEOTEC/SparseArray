@@ -621,3 +621,11 @@ def test_constant():
     assert len(a) == 100
     assert a.non_zero == 10
 
+
+def test_cosine_distance():
+    a = SparseArray.fromlist(random_lst())
+    b = SparseArray.fromlist(random_lst())
+    r = a.cosine_distance(b)
+    r1 = a.dot(b) / (math.sqrt(a.dot(a)) * math.sqrt(b.dot(b)))
+    assert_almost_equals(r, 1 - math.fabs(r1))
+    
