@@ -18,7 +18,7 @@ env:
 
 before_install:
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh; fi
-  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then curl -L -O http://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O miniconda.sh; fi
+  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then curl -O http://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O miniconda.sh; fi
   - chmod 755 miniconda.sh
   - ./miniconda.sh -b
   - export PATH=/home/travis/miniconda3/bin:$PATH
@@ -37,9 +37,9 @@ script:
   - which python
   - python --version
   - which coverage
-  - if [ $python = 2.7 ]; then nosetests --verbose -exe EvoDAG; fi
-  - if [ $python = 3.4 ]; then nosetests --verbose -exe EvoDAG; fi  
-  - if [ $python = 3.5 ]; then nosetests --verbose -exe EvoDAG; fi
+  - if [ $python = 2.7 ]; then nosetests --verbose -exe SparseArray; fi
+  - if [ $python = 3.4 ]; then nosetests --verbose -exe SparseArray; fi  
+  - if [ $python = 3.5 ]; then nosetests --verbose -exe SparseArray; fi
   - if [ $python = 3.6 ]; then coverage run setup_coverage.py nosetests; fi
 
 after_success:
