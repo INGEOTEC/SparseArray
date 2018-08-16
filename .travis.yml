@@ -31,7 +31,12 @@ before_install:
   - pip install coveralls
   - conda config --append channels ingeotec  
   - conda install --yes nose cython
-  - python setup.py build_ext --inplace
+  - if [ $python = 2.7 ]; then python setup.py build_ext --inplace; fi
+  - if [ $python = 3.4 ]; then python setup.py build_ext --inplace; fi  
+  - if [ $python = 3.5 ]; then python setup.py build_ext --inplace; fi
+  - if [ $python = 3.7 ]; then python setup.py build_ext --inplace; fi
+  - if [ $python = 3.6 ]; then python setup_coverage.py build_ext --inplace; fi
+  
 
 # command to run tests
 script:
@@ -41,6 +46,7 @@ script:
   - if [ $python = 2.7 ]; then nosetests --verbose -exe SparseArray; fi
   - if [ $python = 3.4 ]; then nosetests --verbose -exe SparseArray; fi  
   - if [ $python = 3.5 ]; then nosetests --verbose -exe SparseArray; fi
+  - if [ $python = 3.7 ]; then nosetests --verbose -exe SparseArray; fi
   - if [ $python = 3.6 ]; then coverage run setup_coverage.py nosetests; fi
 
 after_success:
