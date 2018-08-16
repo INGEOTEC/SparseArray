@@ -13,9 +13,8 @@
 # limitations under the License.
 # import numpy
 from setuptools import setup
-from Cython.Build import cythonize
 from os.path import join
-import os
+from Cython.Build import cythonize
 
 
 long_desc = 'SparseArray'
@@ -45,7 +44,7 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         "Topic :: Scientific/Engineering :: Artificial Intelligence"],
-    url='https://github.com/mgraffg',
+    url='https://github.com/INGEOTEC/SparseArray',
     author="Mario Graff",
     author_email="mgraffg@ieee.org",
     ext_modules=cythonize('SparseArray/sparse_array.pyx',
