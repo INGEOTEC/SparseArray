@@ -13,9 +13,8 @@
 # limitations under the License.
 # import numpy
 from setuptools import setup
-from Cython.Build import cythonize
 from os.path import join
-import os
+from Cython.Build import cythonize
 
 
 long_desc = 'SparseArray'

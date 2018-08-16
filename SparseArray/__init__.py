@@ -14,4 +14,4 @@
 
 from .sparse_array import SparseArray
 __all__ = ["SparseArray"]
-__version__ = '0.8.14'
+__version__ = '0.8.15'
