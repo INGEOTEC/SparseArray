@@ -13,6 +13,7 @@
 # limitations under the License.
 # import numpy
 from setuptools import setup
+import sys
 from os.path import join
 from Cython.Build import cythonize
 
@@ -41,14 +42,14 @@ setup(
         "Natural Language :: English",
         "Operating System :: MacOS :: MacOS X",
         "Operating System :: POSIX :: Linux",
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         "Topic :: Scientific/Engineering :: Artificial Intelligence"],
     url='https://github.com/INGEOTEC/SparseArray',
     author="Mario Graff",
     author_email="mgraffg@ieee.org",
     ext_modules=cythonize('SparseArray/sparse_array.pyx',
-                          compiler_directives={'profile': False,
+                          compiler_directives={'language_level': sys.version_info[0],
+                                               'profile': False,
                                                'nonecheck': False,
                                                'boundscheck': False}),
     packages=['SparseArray', 'SparseArray/tests'],

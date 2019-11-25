@@ -100,7 +100,7 @@ cdef class SparseArray:
         if k > self._len:
             return 0
         while end - start > 1:
-            half = start + (end - start) / 2
+            half = start + (end - start) // 2
             if a[half] > k:
                 end = half
             elif a[half] < k:
