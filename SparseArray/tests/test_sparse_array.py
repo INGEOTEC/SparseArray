@@ -566,8 +566,10 @@ def test_getitem():
     for p in [0.5, 1]:
         a = random_lst(p=p)
         b = SparseArray.fromlist(a)
-        print(a, b.full_array())
-        [assert_almost_equals(v, b[k]) for k, v in enumerate(a)]
+        # print(a, b.full_array())
+        for k, v in enumerate(a):
+            print(k, v, b[k])
+            assert_almost_equals(v, b[k])
 
 
 def test_finite_inplace():
