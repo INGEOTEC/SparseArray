@@ -44,7 +44,7 @@ jobs:
     - name: Tests on macOS and Windows
       if: ${{ runner.os != 'Linux' }}
       run: |
-        nosetests --verbose EvoMSA/tests
+        nosetests --verbose SparseArray/tests
     - name: coveralls
       if: ${{ runner.os == 'Linux' }}
       env:
