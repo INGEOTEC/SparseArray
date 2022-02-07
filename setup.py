@@ -16,7 +16,7 @@ from setuptools import setup
 import sys
 from os.path import join
 from Cython.Build import cythonize
-#
+
 
 long_desc = 'SparseArray'
 version = open("VERSION").readline().lstrip().rstrip()
