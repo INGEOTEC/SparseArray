@@ -105,8 +105,10 @@ cdef class SparseArray:
                 end = half
             elif a[half] < k:
                 start = half
-            else:
+            elif a[half] == k:
                 return a_value[half]
+            else:
+                break
         if a[start] == k:
             return a_value[start]
         elif a[end] == k:
