@@ -97,7 +97,7 @@ cdef class SparseArray:
         cdef unsigned int start=0, end=self.non_zero, half
         cdef unsigned int *a = self.index.data.as_uints
         cdef double *a_value = self.data.data.as_doubles
-        if k > self._len:
+        if k >= self._len:
             return 0
         while end - start > 1:
             half = start + (end - start) // 2
