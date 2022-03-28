@@ -13,8 +13,8 @@ jobs:
         shell: bash -l {0}
     strategy:
       matrix:
-        os: [ubuntu-latest]
-        python-version: ["3.8"]
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ["3.7", "3.8", "3.9"]
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python
@@ -39,4 +39,7 @@ jobs:
         TWINE: ${{ secrets.TWINE }}
       run: |
         twine upload --skip-existing -u mgraffg -p $TWINE dist/*.tar.gz;
+    - name: Wheel
+      if: ${{ runner.os != 'Linux' }}        
+      run: |      
         twine upload --skip-existing -u mgraffg -p $TWINE dist/*.whl;        
