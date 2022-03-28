@@ -35,6 +35,7 @@ jobs:
         python setup.py sdist
         python setup.py bdist_wheel
     - name: Pip
+      if: ${{ runner.os == 'Linux' }}
       env:
         TWINE: ${{ secrets.TWINE }}
       run: |
@@ -44,5 +45,4 @@ jobs:
       env:
         TWINE: ${{ secrets.TWINE }}              
       run: |
-        ls dist
-        twine upload --skip-existing -u mgraffg -p $TWINE dist dist/*.whl;        
+        twine upload --skip-existing -u mgraffg -p $TWINE dist/*;        
