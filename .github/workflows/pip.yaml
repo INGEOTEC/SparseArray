@@ -33,8 +33,10 @@ jobs:
         pip install twine
         conda install --yes cython
         python setup.py sdist
+        python setup.py bdist_wheel
     - name: Pip
       env:
         TWINE: ${{ secrets.TWINE }}
       run: |
         twine upload --skip-existing -u mgraffg -p $TWINE dist/*.tar.gz;
+        twine upload --skip-existing -u mgraffg -p $TWINE dist/*.whl;        
