@@ -40,7 +40,9 @@ jobs:
       run: |
         twine upload --skip-existing -u mgraffg -p $TWINE dist/*.tar.gz;
     - name: Wheel
-      if: ${{ runner.os != 'Linux' }}        
+      if: ${{ runner.os != 'Linux' }}
+      env:
+        TWINE: ${{ secrets.TWINE }}              
       run: |
         ls dist
         twine upload --skip-existing -u mgraffg -p $TWINE dist dist/*.whl;        
