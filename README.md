@@ -11,4 +11,4 @@
 [![Anaconda-Server Badge](https://anaconda.org/ingeotec/sparsearray/badges/license.svg)](https://anaconda.org/ingeotec/sparsearray)
 
 
-# SparseArray
+# SparseArray 
