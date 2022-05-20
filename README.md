@@ -1,3 +1,4 @@
+[![Tests](https://github.com/INGEOTEC/SparseArray/actions/workflows/test.yaml/badge.svg)](https://github.com/INGEOTEC/SparseArray/actions/workflows/test.yaml)
 [![Coverage Status](https://coveralls.io/repos/github/INGEOTEC/SparseArray/badge.svg?branch=master)](https://coveralls.io/github/INGEOTEC/SparseArray?branch=master)
 [![PyPI version](https://badge.fury.io/py/sparsearray.svg)](https://badge.fury.io/py/sparsearray)
 [![Azure Pipelines](https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/sparsearray-feedstock?branchName=main)](https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=16155&branchName=main)
