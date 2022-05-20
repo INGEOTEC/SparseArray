@@ -40,7 +40,7 @@ jobs:
         which python
         python --version
         which coverage
-        coverage run setup.py nosetests --with-doctest
+        nosetests --verbose --with-coverage --cover-package=SparseArray SparseArray/tests
     - name: Tests on macOS and Windows
       if: ${{ runner.os != 'Linux' }}
       run: |
