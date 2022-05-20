@@ -5,4 +5,4 @@
 [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/sparsearray.svg)](https://anaconda.org/conda-forge/sparsearray)
 
 
-# SparseArray
+# SparseArray 
